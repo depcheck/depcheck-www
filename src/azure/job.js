@@ -3,30 +3,35 @@ import * as logger from './logger';
 
 function process(message, fn) {
   if (!message) {
-    throw message; // the handle function will capture and re-query
+    logger.debug('No message in the queue.');
+    throw new Error('no-message');
   }
 
+  logger.debug(`Process the message, id: [${message.messageid}], text: [${message.messagetext}]`);
   return fn(message.messagetext).then(() => message);
 }
 
 function handle(error, query) {
-  if (error) {
-    logger.error(error);
-  } else {
-    logger.debug('No message in the queue.');
+  if (error && error.message !== 'no-message') {
+    logger.error(`Error happens. ${error}`);
   }
 
-  // when error, sleep 10 second before next query
-  setTimeout(query, 10000);
+  // when error or no-message, sleep 10 second before next query
+  const interval = error ? 10000 : 0;
+
+  logger.debug(`Finish query, trigger next query after ${interval}ms.`);
+  setTimeout(query, interval);
 }
 
 export function execute(queueName, fn) {
   function query() {
+    logger.debug(`Start query on the queue [${queueName}].`);
     queue.peek(queueName)
     .then(message => process(message, fn))
     .then(message => queue.remove(queueName, message))
-    .then(() => setTimeout(query, 0), error => handle(error, query));
+    .then(() => handle(null, query), error => handle(error, query));
   }
 
+  logger.debug(`Listen on jobs in the queue [${queueName}].`);
   setTimeout(query, 0);
 }

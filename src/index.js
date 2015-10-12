@@ -7,6 +7,8 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 app.get('/', (req, res) => {
+  logger.debug('Request the home page.');
+
   const tableName = 'ping';
   table.ensure(tableName)
   .then(() => table.query(tableName))
@@ -14,6 +16,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/ping', (req, res) => {
+  logger.debug('Ping a message.');
+
   const tableName = 'ping';
   const dateTime = new Date();
   const record = {
