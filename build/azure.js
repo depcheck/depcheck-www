@@ -1,15 +1,7 @@
-import fs from 'fs';
 import del from 'del';
 import path from 'path';
 import gulp from 'gulp';
-import mkdirp from 'mkdirp';
-
-function writeFile(filePath, content) {
-  const fileDir = path.dirname(filePath);
-  return new Promise((resolve, reject) =>
-    mkdirp(fileDir, error =>
-      error ? reject(error) : fs.writeFile(filePath, content, resolve)));
-}
+import writeFile from './write-file';
 
 gulp.task('azure:clean', () =>
   del([

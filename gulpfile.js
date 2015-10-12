@@ -1,19 +1,11 @@
-import fs from 'fs';
 import del from 'del';
 import path from 'path';
 import gulp from 'gulp';
-import mkdirp from 'mkdirp';
 import eslint from 'gulp-eslint';
 import babel from 'gulp-babel';
+import writeFile from './build/write-file';
 
 import './build/azure';
-
-function writeFile(filePath, content) {
-  const fileDir = path.dirname(filePath);
-  return new Promise((resolve, reject) =>
-    mkdirp(fileDir, error =>
-      error ? reject(error) : fs.writeFile(filePath, content, resolve)));
-}
 
 gulp.task('clean', ['azure:clean'], () =>
   del(['dist']));
