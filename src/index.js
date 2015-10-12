@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
-
 import express from 'express';
 import * as table from './azure/table';
 import * as queue from './azure/queue';
+import * as logger from './azure/logger';
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -32,5 +31,5 @@ app.post('/ping', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log('Listening on port', port);
+  logger.info(`Server started, listening on ${port}.`);
 });

@@ -1,4 +1,5 @@
 import * as queue from './queue';
+import * as logger from './logger';
 
 function process(message, fn) {
   if (!message) {
@@ -9,7 +10,11 @@ function process(message, fn) {
 }
 
 function handle(error, query) {
-  console.error(error || 'No message in the queue.'); // eslint-disable-line no-console
+  if (error) {
+    logger.error(error);
+  } else {
+    logger.debug('No message in the queue.');
+  }
 
   // when error, sleep 10 second before next query
   setTimeout(query, 10000);

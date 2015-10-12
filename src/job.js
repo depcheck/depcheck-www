@@ -1,8 +1,9 @@
 import * as job from './azure/job';
 import * as table from './azure/table';
+import * as logger from './azure/logger';
 
 job.execute('ping', message => {
-  console.log(message); // eslint-disable-line no-console
+  logger.info(message);
 
   return table.insert('ping', {
     PartitionKey: 'pong',
