@@ -15,7 +15,7 @@ function writeFile(filePath, content) {
       error ? reject(error) : fs.writeFile(filePath, content, resolve)));
 }
 
-gulp.task('clean', ['azure-clean'], () =>
+gulp.task('clean', ['azure:clean'], () =>
   del(['dist']));
 
 gulp.task('lint', () =>
@@ -35,5 +35,3 @@ gulp.task('configuration', ['clean'], () =>
     '{}'));
 
 gulp.task('build', ['lint', 'transform', 'configuration']);
-
-gulp.task('deploy-azure', ['build', 'azure-tasks']);

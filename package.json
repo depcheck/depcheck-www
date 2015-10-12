@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
-    "deploy-azure": "babel-node ./node_modules/gulp/bin/gulp.js deploy-azure",
+    "build-azure": "babel-node ./node_modules/gulp/bin/gulp.js build-azure",
     "local": "babel-node ./src/index.js",
     "job": "babel-node ./src/job.js"
   },
