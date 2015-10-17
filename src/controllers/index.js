@@ -15,6 +15,15 @@ function validateToken() {
 router.get('/', (req, res) =>
   res.send('hello world'));
 
+router.get('/:provider/:user', (req, res) => {
+  const { provider, user } = req.params;
+  const queryToken = table.query('token', { filter: { provider, user } });
+
+  // TODO request all packages from provider (Github)
+  Promise.all([queryToken]).then(([tokens]) => res.json(tokens),
+    error => res.send(error));
+});
+
 router.route('/token/:provider/:user/:repo')
   .get((req, res) => {
     const { provider, user, repo } = req.params;
@@ -32,7 +41,7 @@ router.route('/token/:provider/:user/:repo')
     const id = `${provider}:${user}-$KEY$-${repo}`;
     const token = Guid.raw();
 
-    table.insert('token', { id, token })
+    table.insert('token', { id, token, provider, user, repo })
     .then(entity => res.json(entity),
       error => res.send(error));
   });
