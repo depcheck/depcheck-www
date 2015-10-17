@@ -1,8 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import * as repoModel from '../models/repo';
 import * as tokenModel from '../models/token';
 import * as packageModel from '../models/package';
-import { table } from '../services';
 
 const jsonParser = bodyParser.json();
 const router = new express.Router();
@@ -12,11 +12,8 @@ router.get('/', (req, res) =>
   res.send('hello world'));
 
 router.get('/:provider/:user', (req, res) => {
-  const { provider, user } = req.params;
-  const queryToken = table.query('token', { filter: { provider, user } });
-
-  // TODO request all packages from provider (Github)
-  Promise.all([queryToken]).then(([tokens]) => res.json(tokens),
+  repoModel.query(req.params)
+  .then(result => res.json(result),
     error => res.send(error));
 });
 

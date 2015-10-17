@@ -14,6 +14,11 @@ export function create({ provider, user, repo }) {
     .then(record => record.token);
 }
 
+export function query(filter) {
+  logger.debug(`[model:token] query token with filter ${JSON.stringify(filter)}.`);
+  return table.query('token', { filter });
+}
+
 export function get({ provider, user, repo }) {
   const id = getId(provider, user, repo);
 
