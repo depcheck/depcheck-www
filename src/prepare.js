@@ -1,6 +1,7 @@
 import { logger, table } from './services';
 
 const tables = [
+  'package',
 ];
 
 export default function prepare() {
