@@ -1,3 +1,4 @@
+import Guid from 'guid';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { table } from '../services';
@@ -13,6 +14,28 @@ function validateToken() {
 
 router.get('/', (req, res) =>
   res.send('hello world'));
+
+router.route('/token/:provider/:user/:repo')
+  .get((req, res) => {
+    const { provider, user, repo } = req.params;
+    const id = `${provider}:${user}-$KEY$-${repo}`;
+
+    table.query('token', {
+      limite: 1,
+      filter: { id },
+    })
+    .then(([record]) => res.json(record),
+      error => res.send(error));
+  })
+  .post((req, res) => {
+    const { provider, user, repo } = req.params;
+    const id = `${provider}:${user}-$KEY$-${repo}`;
+    const token = Guid.raw();
+
+    table.insert('token', { id, token })
+    .then(entity => res.json(entity),
+      error => res.send(error));
+  });
 
 router.route('/:provider/:user/:repo')
   .get((req, res) => {
