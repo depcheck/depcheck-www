@@ -4,7 +4,15 @@ export function query({ provider, user, repo }) {
   logger.debug(`[model:package] query package with provider [${provider}], user [${user}] and repo [${repo}].`);
   return table.query('package', {
     filter: { provider, user, repo },
-  });
+  }).then(result => result.map(item => ({
+    provider: item.provider,
+    user: item.user,
+    repo: item.repo,
+    branch: item.branch,
+    report: item.report,
+    dependencies: JSON.parse(item.dependencies),
+    devDependencies: JSON.parse(item.devDependencies),
+  })));
 }
 
 export function upsert({ provider, user, repo, branch, report, result }) {
