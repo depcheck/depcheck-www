@@ -33,7 +33,7 @@ router.route('/:provider/:user/:repo')
     const branch = req.body.branch;
     const report = req.body.report;
     const result = req.body.result;
-    const id = `${provider}/${user}/${repo}-$KEY$-${branch}/${report}`;
+    const id = `${provider}:${user}:${repo}-$KEY$-${branch}:${report}`;
 
     const record = {
       id,
