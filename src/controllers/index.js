@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+
 import * as repoModel from '../models/repo';
 import * as tokenModel from '../models/token';
 import * as packageModel from '../models/package';
@@ -11,33 +12,28 @@ export default router;
 router.get('/', (req, res) =>
   res.send('hello world'));
 
-router.get('/:provider/:user', (req, res) => {
+router.get('/:provider/:user', (req, res) =>
   repoModel.query(req.params)
   .then(result => res.json(result),
-    error => res.send(error));
-});
+    error => res.send(error)));
 
 router.route('/token/:provider/:user/:repo')
-  .get((req, res) => {
+  .get((req, res) =>
     tokenModel.get(req.params)
     .then(token => res.json(token),
-      error => res.send(error));
-  })
-  .post((req, res) => {
+      error => res.send(error)))
+  .post((req, res) =>
     tokenModel.create(req.params)
     .then(token => res.json(token),
-      error => res.send(error.toString()));
-  });
+      error => res.send(error.toString())));
 
 router.route('/:provider/:user/:repo')
-  .get((req, res) => {
+  .get((req, res) =>
     packageModel.query(req.params)
     .then(result => res.json(result),
-      error => res.send(error));
-  })
-  .post(jsonParser, (req, res) => {
+      error => res.send(error)))
+  .post(jsonParser, (req, res) =>
     tokenModel.validate({ ...req.params, token: req.body.token })
     .then(() => packageModel.upsert({ ...req.params, ...req.body }))
     .then(entity => res.json(entity),
-      error => res.send(error.toString()));
-  });
+      error => res.send(error.toString())));
