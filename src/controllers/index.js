@@ -79,7 +79,7 @@ router.route('/:provider/:user/:repo')
     const id = `${provider}:${user}:${repo}-$KEY$-${branch}:${report}`;
 
     validateToken(provider, user, repo, token)
-    .then(() => table.insert('package', {
+    .then(() => table.upsert('package', {
       id,
       provider,
       user,

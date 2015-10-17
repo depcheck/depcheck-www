@@ -46,6 +46,21 @@ export function update(tableName, record) {
   });
 }
 
+export function upsert(tableName, record) {
+  logger.debug(`[service:local] upsert record ${JSON.stringify(record)} into table [${tableName}].`);
+  return new Promise(resolve => {
+    const collection = db.collection(tableName);
+    const existing = collection.items.filter(item => item.id === record.id)[0];
+    if (existing) {
+      collection.update(existing.cid, record);
+    } else {
+      collection.insert(record);
+    }
+
+    resolve(record);
+  });
+}
+
 export function remove(tableName, record) {
   logger.debug(`[service:local] remove record with id [${record.cid}] from table [${tableName}].`);
   return new Promise(resolve => {
