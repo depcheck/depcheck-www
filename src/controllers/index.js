@@ -1,15 +1,28 @@
 import Guid from 'guid';
 import express from 'express';
 import bodyParser from 'body-parser';
-import { table } from '../services';
+import { logger, table } from '../services';
 
 const jsonParser = bodyParser.json();
 const router = new express.Router();
 export default router;
 
-function validateToken() {
-  // TODO validate request token
-  return true;
+function validateToken(provider, user, repo, token) {
+  const id = `${provider}:${user}-$KEY$-${repo}`;
+  return table.query('token', {
+    limite: 1,
+    filter: { id },
+  })
+  .then(([expected]) => {
+    if (!expected) {
+      const name = `${provider}/${user}/${repo}`;
+      logger.info(`[router] the repository [${name}] is not enabled.`);
+      throw new Error(`Depcheck for repository [${name}] is not enabled.`);
+    } else if (expected.token !== token) {
+      logger.info(`[router] unauthorized, expected token [${expected.token}], actual token [${token}].`);
+      throw new Error('Unauthorized to update the depcheck status.');
+    }
+  });
 }
 
 router.get('/', (req, res) =>
@@ -60,14 +73,13 @@ router.route('/:provider/:user/:repo')
   .post(jsonParser, (req, res) => {
     const { provider, user, repo } = req.params;
     const token = req.body.token;
-    validateToken(provider, user, repo, token);
-
     const branch = req.body.branch;
     const report = req.body.report;
     const result = req.body.result;
     const id = `${provider}:${user}:${repo}-$KEY$-${branch}:${report}`;
 
-    const record = {
+    validateToken(provider, user, repo, token)
+    .then(() => table.insert('package', {
       id,
       provider,
       user,
@@ -76,9 +88,7 @@ router.route('/:provider/:user/:repo')
       report,
       dependencies: JSON.stringify(result.dependencies),
       devDependencies: JSON.stringify(result.devDependencies),
-    };
-
-    table.insert('package', record)
+    }))
     .then(entity => res.json(entity),
-      error => res.send(error));
+      error => res.send(error.toString()));
   });
