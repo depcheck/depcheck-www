@@ -32,7 +32,14 @@ export function insert(tableName, record) {
   logger.debug(`[service:local] insert record ${JSON.stringify(record)} into table [${tableName}].`);
   return new Promise(resolve => {
     const collection = db.collection(tableName);
-    collection.insert(record);
+    const existing = collection.items.filter(item => item.id === record.id)[0];
+    if (existing) {
+      logger.info(`[service:local] insert failed, because record with id [${record.id}] has existed.`);
+      throw new Error(`Record with ID [${record.id}] has existed.`);
+    } else {
+      collection.insert(record);
+    }
+
     resolve(record);
   });
 }
@@ -42,6 +49,21 @@ export function update(tableName, record) {
   return new Promise(resolve => {
     const collection = db.collection(tableName);
     collection.update(record.cid, record);
+    resolve(record);
+  });
+}
+
+export function upsert(tableName, record) {
+  logger.debug(`[service:local] upsert record ${JSON.stringify(record)} into table [${tableName}].`);
+  return new Promise(resolve => {
+    const collection = db.collection(tableName);
+    const existing = collection.items.filter(item => item.id === record.id)[0];
+    if (existing) {
+      collection.update(existing.cid, record);
+    } else {
+      collection.insert(record);
+    }
+
     resolve(record);
   });
 }

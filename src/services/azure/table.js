@@ -51,3 +51,11 @@ export function update(tableName, record) {
   return call('updateEntity', tableName, toEntity(record))
     .then(result => ({ ...record, ...result}));
 }
+
+export function upsert(tableName, record) {
+  logger.debug(`[service:azure] upsert record ${JSON.stringify(record)} into table [${tableName}].`);
+  const entity = toEntity(record);
+  return call('insertEntity', tableName, entity)
+    .catch(() => call('updateEntity', tableName, entity))
+    .then(result => ({ ...record, ...result }));
+}
