@@ -32,7 +32,14 @@ export function insert(tableName, record) {
   logger.debug(`[service:local] insert record ${JSON.stringify(record)} into table [${tableName}].`);
   return new Promise(resolve => {
     const collection = db.collection(tableName);
-    collection.insert(record);
+    const existing = collection.items.filter(item => item.id === record.id)[0];
+    if (existing) {
+      logger.info(`[service:local] insert failed, because record with id [${record.id}] has existed.`);
+      throw new Error(`Record with ID [${record.id}] has existed.`);
+    } else {
+      collection.insert(record);
+    }
+
     resolve(record);
   });
 }

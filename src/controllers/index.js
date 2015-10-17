@@ -56,7 +56,7 @@ router.route('/token/:provider/:user/:repo')
 
     table.insert('token', { id, token, provider, user, repo })
     .then(entity => res.json(entity),
-      error => res.send(error));
+      error => res.send(error.toString()));
   });
 
 router.route('/:provider/:user/:repo')
