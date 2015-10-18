@@ -17,6 +17,10 @@ router.get('/login/:provider', (req, res) =>
   loginModel.getLoginUrl(req.params)
   .then(url => res.redirect(url)));
 
+router.get('/login/:provider/callback', (req, res) =>
+  loginModel.callback(req.params, req.query)
+  .then(url => res.redirect(url)));
+
 router.get('/:provider/:user', (req, res) =>
   repoModel.query(req.params)
   .then(result => res.json(result),
