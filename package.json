@@ -3,6 +3,10 @@
   "description": "Depcheck web service",
   "repository": "https://github.com/lijunle/depcheck-web",
   "license": "MIT",
+  "engines": {
+    "node": "4.x",
+    "npm": "3.x"
+  },
   "scripts": {
     "lint": "babel-node ./node_modules/gulp/bin/gulp.js lint",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
