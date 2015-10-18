@@ -29,4 +29,5 @@ node_modules
 
 # Generated directories and files
 dist
+sessions
 server.js
