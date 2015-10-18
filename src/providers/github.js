@@ -1,6 +1,14 @@
 import request from 'request';
 import { logger } from '../services';
 
+const clientId = process.env.GITHUB_CLIENT_ID;
+
+export function getLoginUrl() {
+  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}`;
+  logger.debug(`[provider:github] generate login URL [${url}].`);
+  return Promise.resolve(url);
+}
+
 export function query(user) {
   return new Promise((resolve, reject) => {
     const url = `https://api.github.com/users/${user}/repos`;

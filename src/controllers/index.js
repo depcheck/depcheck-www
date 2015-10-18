@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import * as repoModel from '../models/repo';
+import * as loginModel from '../models/login';
 import * as tokenModel from '../models/token';
 import * as packageModel from '../models/package';
 
@@ -11,6 +12,10 @@ export default router;
 
 router.get('/', (req, res) =>
   res.send('hello world'));
+
+router.get('/login/:provider', (req, res) =>
+  loginModel.getLoginUrl(req.params)
+  .then(url => res.redirect(url)));
 
 router.get('/:provider/:user', (req, res) =>
   repoModel.query(req.params)
