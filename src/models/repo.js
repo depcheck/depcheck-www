@@ -1,10 +1,6 @@
+import getProvider from '../providers';
 import * as tokenModel from './token';
 import { logger } from '../services';
-
-function getProvider(provider) {
-  // TODO catch exception if provider not support
-  return require(`../providers/${provider}`);
-}
 
 function mapTokenToRepo(tokens, repos) {
   const repoLookup = repos.reduce((result, repo) => ({
