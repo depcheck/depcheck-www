@@ -11,7 +11,7 @@ const router = new express.Router();
 export default router;
 
 router.get('/', (req, res) =>
-  res.send('hello world'));
+  res.render('index'));
 
 router.get('/login/:provider', (req, res) =>
   loginModel.getLoginUrl(req.params)
