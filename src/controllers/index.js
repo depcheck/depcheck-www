@@ -38,8 +38,7 @@ router.route('/token/:provider/:user/:repo')
       error => res.send(error.toString())));
 
 router.route('/:provider/:user/:repo')
-  .all(loginModel.validate)
-  .get((req, res) =>
+  .get(loginModel.validate, (req, res) =>
     reportModel.query(req.params)
     .then(result => res.render('repo', result),
       error => res.send(error)))
