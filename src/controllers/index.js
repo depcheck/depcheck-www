@@ -41,7 +41,7 @@ router.route('/:provider/:user/:repo')
   .all(loginModel.validate)
   .get((req, res) =>
     packageModel.query(req.params)
-    .then(result => res.json(result),
+    .then(result => res.render('repo', result),
       error => res.send(error)))
   .post(jsonParser, (req, res) =>
     tokenModel.validate({ ...req.params, token: req.body.token })
