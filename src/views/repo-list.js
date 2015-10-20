@@ -11,10 +11,10 @@ const Token = ({ token, url }) =>
   );
 
 const Repo = ({ name, description, token, repoUrl, requestTokenUrl }) => (
-  <li key={name}>
+  <li>
     <h4><a href={repoUrl}>{name}</a></h4>
     <p>{description}</p>
-    <p>Token: <Token token={token} url={requestTokenUrl} /></p>
+    <div>Token: <Token token={token} url={requestTokenUrl} /></div>
   </li>
 );
 
@@ -24,7 +24,11 @@ export default React.createClass({
       <Layout>
         <h1>Repo List</h1>
         <p>Hi, {this.props.provider}/{this.props.user}!</p>
-        <ul>{this.props.repos.map(repo => <Repo {...repo} />)}</ul>
+        <ul>
+        {
+          this.props.repos.map(repo => <Repo key={repo.name} {...repo} />)
+        }
+        </ul>
       </Layout>
     );
   },
