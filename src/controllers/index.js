@@ -11,7 +11,7 @@ const router = new express.Router();
 export default router;
 
 router.get('/', (req, res) =>
-  res.send('hello world'));
+  res.render('index'));
 
 router.get('/login/:provider', (req, res) =>
   loginModel.getLoginUrl(req.params)
@@ -23,7 +23,7 @@ router.get('/login/:provider/callback', (req, res) =>
 
 router.get('/:provider/:user', loginModel.validate, (req, res) =>
   repoModel.query(req.params)
-  .then(result => res.json(result),
+  .then(result => res.render('repo-list', result),
     error => res.send(error)));
 
 router.route('/token/:provider/:user/:repo')
@@ -34,14 +34,14 @@ router.route('/token/:provider/:user/:repo')
       error => res.send(error)))
   .post((req, res) =>
     tokenModel.create(req.params)
-    .then(token => res.json(token),
+    .then(() => res.redirect(`/${req.params.provider}/${req.params.user}`),
       error => res.send(error.toString())));
 
 router.route('/:provider/:user/:repo')
   .all(loginModel.validate)
   .get((req, res) =>
     packageModel.query(req.params)
-    .then(result => res.json(result),
+    .then(result => res.render('repo', result),
       error => res.send(error)))
   .post(jsonParser, (req, res) =>
     tokenModel.validate({ ...req.params, token: req.body.token })
