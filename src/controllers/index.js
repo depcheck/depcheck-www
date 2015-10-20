@@ -34,7 +34,7 @@ router.route('/token/:provider/:user/:repo')
       error => res.send(error)))
   .post((req, res) =>
     tokenModel.create(req.params)
-    .then(token => res.json(token),
+    .then(() => res.redirect(`/${req.params.provider}/${req.params.user}`),
       error => res.send(error.toString())));
 
 router.route('/:provider/:user/:repo')

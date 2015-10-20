@@ -1,15 +1,20 @@
 import React from 'react';
 import Layout from './layout';
 
-const Token = ({ token }) => (
-  token ? <code>{token}</code> : <input type="button" value="Enable" />
-);
+const Token = ({ token, url }) =>
+  token
+  ? <code>{token}</code>
+  : (
+    <form method="post" action={url}>
+      <input type="submit" value="Enable" />
+    </form>
+  );
 
-const Repo = ({ name, description, token }) => (
+const Repo = ({ name, description, token, packageUrl, requestTokenUrl }) => (
   <li key={name}>
-    <h4>{name}</h4>
+    <h4><a href={packageUrl}>{name}</a></h4>
     <p>{description}</p>
-    <p>Token: <Token token={token} /></p>
+    <p>Token: <Token token={token} url={requestTokenUrl} /></p>
   </li>
 );
 

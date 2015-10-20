@@ -35,6 +35,10 @@ export function query({ provider, user }) {
   .then(([repos, tokens]) => ({
     provider,
     user,
-    repos: mapTokenToRepo(tokens, repos),
+    repos: mapTokenToRepo(tokens, repos).map(repo => ({
+      ...repo,
+      packageUrl: `/${provider}/${user}/${repo.name}`,
+      requestTokenUrl: `/token/${provider}/${user}/${repo.name}`,
+    })),
   }));
 }
