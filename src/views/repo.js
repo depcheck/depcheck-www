@@ -13,16 +13,16 @@ const codeSnippet = `
 }`;
 
 const Report = ({ branch, report, dependencies, devDependencies }) => (
-  <li key={`${branch}/${report}`}>
+  <li>
     <p>Branch: {branch}</p>
     <p>Report: {report}</p>
     <div>
       <p>Unused dependencies</p>
-      <ul>{dependencies.map(dep => <li>{dep}</li>)}</ul>
+      <ul>{dependencies.map(dep => <li key={dep}>{dep}</li>)}</ul>
     </div>
     <div>
       <p>Unused devDependencies</p>
-      <ul>{devDependencies.map(dep => <li>{dep}</li>)}</ul>
+      <ul>{devDependencies.map(dep => <li key={dep}>{dep}</li>)}</ul>
     </div>
   </li>
 );
@@ -35,7 +35,12 @@ export default React.createClass({
         <h4>From {this.props.provider}/{this.props.user}!</h4>
         <div>
           <p>Reports</p>
-          <ul>{this.props.reports.map(report => <Report {...report}/>)}</ul>
+          <ul>
+          {
+            this.props.reports.map(report =>
+              <Report key={`${report.branch}/${report.report}`} {...report}/>)
+          }
+          </ul>
         </div>
         <div>
           <p>Example</p>

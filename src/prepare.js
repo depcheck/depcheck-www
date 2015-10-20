@@ -1,7 +1,7 @@
 import { logger, table } from './services';
 
 const tables = [
-  'package',
+  'report',
   'token',
 ];
 
