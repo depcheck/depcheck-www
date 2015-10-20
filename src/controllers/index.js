@@ -23,7 +23,7 @@ router.get('/login/:provider/callback', (req, res) =>
 
 router.get('/:provider/:user', loginModel.validate, (req, res) =>
   repoModel.query(req.params)
-  .then(result => res.json(result),
+  .then(result => res.render('repo-list', result),
     error => res.send(error)));
 
 router.route('/token/:provider/:user/:repo')
