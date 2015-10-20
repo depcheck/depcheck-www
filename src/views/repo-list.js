@@ -10,9 +10,9 @@ const Token = ({ token, url }) =>
     </form>
   );
 
-const Repo = ({ name, description, token, packageUrl, requestTokenUrl }) => (
+const Repo = ({ name, description, token, repoUrl, requestTokenUrl }) => (
   <li key={name}>
-    <h4><a href={packageUrl}>{name}</a></h4>
+    <h4><a href={repoUrl}>{name}</a></h4>
     <p>{description}</p>
     <p>Token: <Token token={token} url={requestTokenUrl} /></p>
   </li>

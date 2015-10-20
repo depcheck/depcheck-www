@@ -37,7 +37,7 @@ export function query({ provider, user }) {
     user,
     repos: mapTokenToRepo(tokens, repos).map(repo => ({
       ...repo,
-      packageUrl: `/${provider}/${user}/${repo.name}`,
+      repoUrl: `/${provider}/${user}/${repo.name}`,
       requestTokenUrl: `/token/${provider}/${user}/${repo.name}`,
     })),
   }));

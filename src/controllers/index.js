@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import * as repoModel from '../models/repo';
 import * as loginModel from '../models/login';
 import * as tokenModel from '../models/token';
-import * as packageModel from '../models/package';
+import * as reportModel from '../models/report';
 
 const jsonParser = bodyParser.json();
 const router = new express.Router();
@@ -40,11 +40,11 @@ router.route('/token/:provider/:user/:repo')
 router.route('/:provider/:user/:repo')
   .all(loginModel.validate)
   .get((req, res) =>
-    packageModel.query(req.params)
+    reportModel.query(req.params)
     .then(result => res.render('repo', result),
       error => res.send(error)))
   .post(jsonParser, (req, res) =>
     tokenModel.validate({ ...req.params, token: req.body.token })
-    .then(() => packageModel.upsert({ ...req.params, ...req.body }))
+    .then(() => reportModel.upsert({ ...req.params, ...req.body }))
     .then(entity => res.json(entity),
       error => res.send(error.toString())));
