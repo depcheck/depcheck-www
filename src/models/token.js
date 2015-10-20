@@ -1,4 +1,4 @@
-import Guid from 'guid';
+import uuid from 'node-uuid';
 import { logger, table } from '../services';
 
 function getId(provider, user, repo) {
@@ -7,7 +7,7 @@ function getId(provider, user, repo) {
 
 export function create({ provider, user, repo }) {
   const id = getId(provider, user, repo);
-  const token = Guid.raw();
+  const token = uuid.v4();
 
   logger.debug(`[model:token] create token for id [${id}].`);
   return table.insert('token', { id, token, provider, user, repo })
