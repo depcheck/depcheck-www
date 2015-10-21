@@ -17,6 +17,16 @@ export function query({ provider, user, repo }) {
   }));
 }
 
+export function get(params) {
+  logger.debug(`[model:report] get report with parameter ${JSON.stringify(params)}.`);
+  const { branch, report = '' } = params;
+  return query(params)
+  .then(result =>
+    result.reports.filter(its =>
+      its.branch === branch && its.report === report))
+  .then(([first]) => first || {});
+}
+
 export function upsert({ provider, user, repo, branch, report, result }) {
   const id = `${provider}:${user}:${repo}-$KEY$-${branch}:${report}`;
 
