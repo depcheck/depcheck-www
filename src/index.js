@@ -18,7 +18,15 @@ app.set('view engine', 'js');
 
 app.engine('js', (filePath, options, callback) => {
   logger.debug(`[app] render view file [${filePath}].`);
-  return viewEngine(filePath, options, callback);
+  return viewEngine(filePath, options, (error, html) => {
+    // HACK to support serve SVG, see reactjs/express-react-views#53
+    const raw = html.substring('<!DOCTYPE html>'.length);
+    const hack = raw.indexOf('<svg') === 0
+      ? raw.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')
+      : html;
+
+    callback(error, hack);
+  });
 });
 
 app.use((req, res, next) => {

@@ -40,7 +40,7 @@ router.route('/token/:provider/:user/:repo')
 // must place the svg router before the next one.
 router.get('/:provider/:user/:repo/:branch/:report?.svg', (req, res) =>
   reportModel.get(req.params)
-  .then(result => res.render('badge', result)));
+  .then(result => res.type('svg').render('badge', result)));
 
 router.route('/:provider/:user/:repo/:report?')
   .get(loginModel.validate, (req, res) =>
