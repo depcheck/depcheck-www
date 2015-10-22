@@ -1,6 +1,4 @@
-import { logger, table } from '../services';
-
-export function query({ provider, user, repo }) {
+export function query({ logger, table }, { provider, user, repo }) {
   logger.debug(`[model:report] query reports with provider [${provider}], user [${user}] and repo [${repo}].`);
   return table.query('report', {
     filter: { provider, user, repo },
@@ -17,17 +15,17 @@ export function query({ provider, user, repo }) {
   }));
 }
 
-export function get(params) {
+export function get({ logger, table }, params) {
   logger.debug(`[model:report] get report with parameter ${JSON.stringify(params)}.`);
   const { branch, report = '' } = params;
-  return query(params)
+  return query({ logger, table }, params)
   .then(result =>
     result.reports.filter(its =>
       its.branch === branch && its.report === report))
   .then(([first]) => first || {});
 }
 
-export function upsert({ provider, user, repo, branch, report, result }) {
+export function upsert({ logger, table }, { provider, user, repo, branch, report, result }) {
   const id = `${provider}:${user}:${repo}-$KEY$-${branch}:${report}`;
 
   logger.debug(`[model:report] upsert report with id [${id}] to result ${JSON.stringify(result)}.`);

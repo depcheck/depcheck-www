@@ -1,11 +1,10 @@
 import uuid from 'node-uuid';
-import { logger, table } from '../services';
 
 function getId(provider, user, repo) {
   return `${provider}:${user}-$KEY$-${repo}`;
 }
 
-export function create({ provider, user, repo }) {
+export function create({ logger, table }, { provider, user, repo }) {
   const id = getId(provider, user, repo);
   const token = uuid.v4();
 
@@ -14,12 +13,12 @@ export function create({ provider, user, repo }) {
     .then(record => record.token);
 }
 
-export function query(filter) {
+export function query({ logger, table }, filter) {
   logger.debug(`[model:token] query token with filter ${JSON.stringify(filter)}.`);
   return table.query('token', { filter });
 }
 
-export function get({ provider, user, repo }) {
+export function get({ logger, table }, { provider, user, repo }) {
   const id = getId(provider, user, repo);
 
   logger.debug(`[model:token] get token of id [${id}].`);
@@ -38,9 +37,9 @@ export function get({ provider, user, repo }) {
   });
 }
 
-export function validate({ provider, user, repo, token }) {
+export function validate({ logger, table }, { provider, user, repo, token }) {
   logger.debug(`[model:token] validate token of id [${getId(provider, user, repo)}].`);
-  return get({ provider, user, repo })
+  return get({ logger, table }, { provider, user, repo })
   .then(expected => {
     if (expected !== token) {
       logger.info(`[model:token] unauthorized, expected token [${expected}], actual token [${token}].`);

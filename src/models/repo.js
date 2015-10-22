@@ -1,6 +1,5 @@
 import getProvider from '../providers';
 import * as tokenModel from './token';
-import { logger } from '../services';
 
 function mapTokenToRepo(tokens, repos) {
   const repoLookup = repos.reduce((result, repo) => ({
@@ -25,11 +24,11 @@ function mapTokenToRepo(tokens, repos) {
   return Object.keys(tokenLookup).map(key => tokenLookup[key]);
 }
 
-export function query({ provider, user }) {
+export function query({ logger, table }, { provider, user }) {
   logger.debug(`[model:repo] query repo list with provider [${provider}] and user [${user}].`);
 
   const queryRepo = getProvider(provider).query(user);
-  const queryToken = tokenModel.query({ provider, user });
+  const queryToken = tokenModel.query({ logger, table }, { provider, user });
 
   return Promise.all([queryRepo, queryToken])
   .then(([repos, tokens]) => ({
