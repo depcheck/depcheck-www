@@ -1,7 +1,12 @@
 /* global describe, it */
 
 import request from 'supertest';
-import app from '../src/app';
+import proxyquire from 'proxyquire';
+import * as services from './fake/services';
+
+const app = proxyquire('../src/app', {
+  './services': services,
+});
 
 describe('/', () =>
   it('should return home page', done =>
