@@ -9,3 +9,52 @@ export const logger = new winston.Logger({
     }),
   ],
 });
+
+function insert() {
+  return Promise.resolve({
+    token: 'new-token',
+  });
+}
+
+function query(tableName) {
+  return Promise.resolve(
+    tableName === 'token'
+    ? [
+      {
+        repo: 'tester-1',
+        token: 'tester-1-token',
+      },
+      {
+        repo: 'other-1',
+        token: 'other-1-token',
+      },
+      {
+        repo: 'other-2',
+        token: 'other-2-token',
+      },
+    ]
+    : [
+      {
+        branch: 'master',
+        report: '',
+        dependencies: JSON.stringify([]),
+        devDependencies: JSON.stringify([]),
+      },
+      {
+        branch: 'master',
+        report: 'fail',
+        dependencies: JSON.stringify(['unused']),
+        devDependencies: JSON.stringify([]),
+      },
+    ]);
+}
+
+function upsert(tableName, record) {
+  return Promise.resolve(record);
+}
+
+export const table = {
+  insert,
+  query,
+  upsert,
+};
