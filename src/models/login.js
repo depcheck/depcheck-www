@@ -1,5 +1,5 @@
-import getProvider from '../providers';
 import { logger } from '../services';
+import { getProvider } from '../providers';
 
 export function getLoginUrl({ provider }) {
   logger.debug(`[model:login] generate login URL from provider [${provider}].`);

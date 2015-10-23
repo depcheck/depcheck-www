@@ -1,6 +1,6 @@
-import getProvider from '../providers';
 import * as tokenModel from './token';
 import { logger } from '../services';
+import { getProvider } from '../providers';
 
 function mapTokenToRepo(tokens, repos) {
   const repoLookup = repos.reduce((result, repo) => ({
