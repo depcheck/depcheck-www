@@ -11,7 +11,7 @@ gulp.task('clean', ['azure:clean'], () =>
   del(['dist']));
 
 gulp.task('lint', () =>
-  gulp.src(['gulpfile.js', 'src/**/*.js'])
+  gulp.src(['gulpfile.js', 'src/**/*.js', 'test/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failOnError()));
