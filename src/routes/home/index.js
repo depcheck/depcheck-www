@@ -3,7 +3,7 @@ import { logger } from '../../services';
 
 export const route = '/';
 
-export const view = 'index';
+export const view = 'home';
 
 export const model = ({ session }) => {
   const login = loginModel.getUser(session);
