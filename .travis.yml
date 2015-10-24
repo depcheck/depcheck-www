@@ -6,6 +6,7 @@ node_js:
 script:
   - npm run build-azure
   - npm run build
+  - npm run test
 
 deploy:
   provider: azure_web_apps
