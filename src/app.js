@@ -3,6 +3,7 @@ import express from 'express';
 import session from 'express-session';
 import react from 'express-react-views';
 import fileStoreFactory from 'session-file-store';
+import routes from './routes';
 import controller from './controllers';
 import { logger } from './services';
 
@@ -44,4 +45,4 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-app.use('/', controller);
+app.use('/', routes, controller);
