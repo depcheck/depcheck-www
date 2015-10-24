@@ -10,9 +10,6 @@ const jsonParser = bodyParser.json();
 const router = new express.Router();
 export default router;
 
-router.get('/', (req, res) =>
-  res.render('index'));
-
 router.get('/login/:provider', (req, res) =>
   loginModel.getLoginUrl(req.params)
   .then(url => res.redirect(url)));
