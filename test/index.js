@@ -22,7 +22,7 @@ describe('/', () =>
   it('should return home page', done =>
     request(app)
       .get('/')
-      .expect(200, /hello world/i)
+      .expect(200, /Depcheck Web Service/i)
       .end(done)));
 
 describe('/login/test', () =>

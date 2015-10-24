@@ -12,6 +12,6 @@ routes.forEach(name => {
   const { route, view, model } = require(`./${name}`);
   router.get(route, (req, res) => {
     logger.debug(`[routes:index] route [${route}] from file [${name}] is hit.`);
-    res.render(view, model());
+    res.render(view, model(req));
   });
 });

@@ -12,6 +12,18 @@ export function callback({ provider }, { code }, session) {
   .then(url => session.login = url);
 }
 
+export function getUser({ login } = {}) {
+  logger.debug(`[model:login] get login user from session [${login}].`);
+
+  if (!login) {
+    return null;
+  }
+
+  // TODO change to store meaningful object to session
+  const [provider, user] = login.substring(1).split('/');
+  return { provider, user };
+}
+
 export function validate(req, res, next) {
   const url = req.url;
   const login = req.session.login;
