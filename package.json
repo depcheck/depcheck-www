@@ -11,7 +11,7 @@
     "lint": "babel-node ./node_modules/gulp/bin/gulp.js lint",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
     "build-azure": "babel-node ./node_modules/gulp/bin/gulp.js build-azure",
-    "test": "mocha --compilers js:babel/register ./test",
+    "test": "mocha --compilers js:babel/register --recursive ./test",
     "local": "babel-node ./src/index.js"
   },
   "dependencies": {

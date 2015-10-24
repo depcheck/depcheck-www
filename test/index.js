@@ -18,13 +18,6 @@ const app = proxyquire('../src/app', {
   '../models/token': { validate, '@global': true },
 });
 
-describe('/', () =>
-  it('should return home page', done =>
-    request(app)
-      .get('/')
-      .expect(200, /Depcheck Web Service/i)
-      .end(done)));
-
 describe('/login/test', () =>
   it('should redirect to OAuth login page', done =>
     request(app)
