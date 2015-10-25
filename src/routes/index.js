@@ -7,6 +7,7 @@ export default router;
 const routes = [
   'home',
   'login',
+  'login/callback',
 ];
 
 routes.forEach(name => {

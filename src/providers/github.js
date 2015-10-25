@@ -33,7 +33,7 @@ function requestApi(url, options) {
     }));
 }
 
-export function getUserUrl(code) {
+export function getUser(code) {
   return requestApi('https://github.com/login/oauth/access_token', {
     method: 'POST',
     qs: {
@@ -47,7 +47,7 @@ export function getUserUrl(code) {
       access_token,
     },
   }))
-  .then(({ login }) => `/github/${login}`);
+  .then(({ login }) => login);
 }
 
 export function query(user) {
