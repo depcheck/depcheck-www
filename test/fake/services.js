@@ -68,5 +68,11 @@ export default function fakeServices(stubs) {
   return {
     logger,
     session,
+    table: {
+      insert(tableName, record) {
+        stubs.table.insert.push({ tableName, record });
+        return Promise.resolve(record);
+      },
+    },
   };
 }
