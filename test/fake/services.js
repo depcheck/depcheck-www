@@ -58,3 +58,15 @@ export const table = {
   query,
   upsert,
 };
+
+export default function fakeServices(stubs) {
+  function session(req, res, next) {
+    req.session = stubs.session;
+    next();
+  }
+
+  return {
+    logger,
+    session,
+  };
+}
