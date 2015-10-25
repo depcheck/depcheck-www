@@ -1,14 +1,12 @@
 /* global describe, it */
 
-import request from '../../utils/request';
+import stub from '../../utils/stub';
 
 describe('/', () => {
   it('should render login link if user not login yet', done =>
-    request('home', {
-      '../../models/login': {
-        getUser() {
-          return null;
-        },
+    stub({
+      session: {
+        login: null,
       },
     })
     .get('/')
@@ -18,14 +16,9 @@ describe('/', () => {
     .end(done));
 
   it('should render welcome and go to repo link if user login', done =>
-    request('home', {
-      '../../models/login': {
-        getUser() {
-          return {
-            provider: 'e2e',
-            user: 'tester',
-          };
-        },
+    stub({
+      session: {
+        login: '/github/tester',
       },
     })
     .get('/')

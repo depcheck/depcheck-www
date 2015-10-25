@@ -1,17 +1,13 @@
 import path from 'path';
 import express from 'express';
-import session from 'express-session';
 import react from 'express-react-views';
-import fileStoreFactory from 'session-file-store';
 import routes from './routes';
 import controller from './controllers';
-import { logger } from './services';
+import { logger, session } from './services';
 
 const app = express();
 export default app;
 
-const sessionSecret = process.env.SESSION_SECRET || 'SESSION_SECRET';
-const FileStore = fileStoreFactory(session);
 const viewEngine = react.createEngine({ transformViews: false });
 
 function hackViewEngineResult(html) {
@@ -38,11 +34,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(session({
-  store: new FileStore(),
-  secret: sessionSecret,
-  resave: false,
-  saveUninitialized: true,
-}));
+app.use(session);
 
 app.use('/', routes, controller);
