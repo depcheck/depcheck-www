@@ -29,3 +29,9 @@ export function getProvider() {
     query,
   };
 }
+
+export default function fakeProviders({ providers = {} }) {
+  return {
+    getLoginUrl: providers.getLoginUrl,
+  };
+}

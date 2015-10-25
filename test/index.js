@@ -18,14 +18,6 @@ const app = proxyquire('../src/app', {
   '../models/token': { validate, '@global': true },
 });
 
-describe('/login/test', () =>
-  it('should redirect to OAuth login page', done =>
-    request(app)
-      .get('/login/test')
-      .expect(302)
-      .expect('Location', providers.expectedLoginUrl)
-      .end(done)));
-
 describe('/login/test/callback', () =>
   it('should redirect to login user page', done =>
     request(app)
