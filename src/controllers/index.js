@@ -10,14 +10,6 @@ const jsonParser = bodyParser.json();
 const router = new express.Router();
 export default router;
 
-router.get('/login/:provider', (req, res) =>
-  loginModel.getLoginUrl(req.params)
-  .then(url => res.redirect(url)));
-
-router.get('/login/:provider/callback', (req, res) =>
-  loginModel.callback(req.params, req.query, req.session)
-  .then(url => res.redirect(url)));
-
 router.get('/:provider/:user', loginModel.validate, (req, res) =>
   repoModel.query(req.params)
   .then(result => res.render('repo-list', result),

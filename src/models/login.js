@@ -1,15 +1,9 @@
 import { logger } from '../services';
-import { getProvider } from '../providers';
 
-export function getLoginUrl({ provider }) {
-  logger.debug(`[model:login] generate login URL from provider [${provider}].`);
-  return getProvider(provider).getLoginUrl();
-}
-
-export function callback({ provider }, { code }, session) {
-  logger.debug(`[model:login] get login callback from provider [${provider}] with code [${code}].`);
-  return getProvider(provider).getUserUrl(code)
-  .then(url => session.login = url);
+export function set({ session, provider, user }) {
+  logger.debug(`[model:login] set login with provider [${provider}] and user [${user}].`);
+  session.login = `/${provider}/${user}`; // TODO store login object
+  return Promise.resolve();
 }
 
 export function getUser({ login } = {}) {
