@@ -7,6 +7,7 @@ export default function request(stubs) {
   const services = {
     ...fakeServices(stubs),
     '@global': true,
+    '@noCallThru': true,
   };
 
   const providers = {
