@@ -13,8 +13,7 @@ describe('route home', () => {
       },
     });
 
-    const result = home.model({});
-    result.should.eql({});
+    return home.model({}).then(result => result.should.eql({}));
   });
 
   it('should return login information if login', () => {
@@ -31,8 +30,9 @@ describe('route home', () => {
       },
     });
 
-    const result = home.model({});
-    result.login.should.eql(login);
-    result.url.repoList.should.not.be.empty();
+    return home.model({}).then(result => {
+      result.login.should.eql(login);
+      result.url.repoList.should.not.be.empty();
+    });
   });
 });

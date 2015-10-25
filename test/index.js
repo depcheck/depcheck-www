@@ -30,21 +30,6 @@ describe('/provider/tester', () =>
       .expect(/other-2/)
       .end(done)));
 
-describe('/token/provider/tester/test-2', () => {
-  it('should post to create a token', done =>
-    request(app)
-      .post('/token/provider/tester/test-2')
-      .expect(302)
-      .expect('Location', `/provider/tester`)
-      .end(done));
-
-  it('should get a token', done =>
-    request(app)
-      .get('/token/provider/tester/test-2')
-      .expect(200, /tester-1-token/)
-      .end(done));
-});
-
 describe('/provider/tester/test-1/master.svg', () => {
   it('should get a passing badge for report without unused dependencies', done =>
     request(app)

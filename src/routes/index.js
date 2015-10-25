@@ -8,23 +8,31 @@ const routes = [
   'home',
   'login',
   'login/callback',
+  'token',
 ];
 
 routes.forEach(name => {
   const module = require(`./${name}`);
-  const { route } = module;
-  router.get(route, (req, res) => {
-    logger.debug(`[routes:index] route [${route}] from file [${name}] is hit.`);
+  const route = router.route(module.route);
 
-    if (module.redirect) {
-      logger.debug(`[routes:index] route [${route}] provides redirect function.`);
-      module.redirect(req).then(url => res.redirect(url));
-    } else if (module.view && module.model) {
-      logger.debug(`[routes:index] route [${route}] provides render view function.`);
-      res.render(module.view, module.model(req));
-    } else {
-      logger.error(`[routes:index] route [${route}] does not provide any function.`);
-      res.status(500).end();
-    }
+  logger.debug(`[routes] route [${module.route}] from file [${name}] provides functions [${Object.keys(module)}].`);
+  route.all((req, res, next) => {
+    logger.debug(`[routes] request [${req.method}] path [${req.url}], hit route [${module.route}] from file [${name}].`);
+    next();
   });
+
+  if (module.post) {
+    route.post((req, res) =>
+      module.post(req).then(result =>
+        req.xhr ? res.send(result) : res.redirect(req.get('Referer'))));
+  } else if (module.redirect) {
+    route.get((req, res) =>
+      module.redirect(req).then(url => res.redirect(url)));
+  } else if (module.view && module.model) {
+    route.get((req, res) =>
+      module.model(req).then(model => res.render(module.view, model)));
+  } else {
+    route.get((req, res) =>
+      res.status(500).end());
+  }
 });
