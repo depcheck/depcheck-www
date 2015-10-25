@@ -18,14 +18,6 @@ const app = proxyquire('../src/app', {
   '../models/token': { validate, '@global': true },
 });
 
-describe('/login/test/callback', () =>
-  it('should redirect to login user page', done =>
-    request(app)
-      .get('/login/test/callback?code=123')
-      .expect(302)
-      .expect('Location', `${providers.expectUserUrl}?code=123`)
-      .end(done)));
-
 describe('/provider/tester', () =>
   it('should render repo list for the tester', done =>
     request(app)

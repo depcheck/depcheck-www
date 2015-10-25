@@ -33,5 +33,6 @@ export function getProvider() {
 export default function fakeProviders({ providers = {} }) {
   return {
     getLoginUrl: providers.getLoginUrl,
+    getUser: providers.getUser,
   };
 }
