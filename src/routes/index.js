@@ -13,29 +13,26 @@ const routes = [
 
 routes.forEach(name => {
   const module = require(`./${name}`);
-  const { route } = module;
+  const route = router.route(module.route);
 
-  // TODO need refactor for easier maintain
+  logger.debug(`[routes] route [${module.route}] from file [${name}] provides functions [${Object.keys(module)}].`);
+  route.all((req, res, next) => {
+    logger.debug(`[routes] request [${req.method}] path [${req.url}], hit route [${module.route}] from file [${name}].`);
+    next();
+  });
+
   if (module.post) {
-    router.post(route, (req, res) => {
-      logger.debug(`[routes:index] post [${route}] from file [${name}].`);
+    route.post((req, res) =>
       module.post(req).then(result =>
-        req.xhr ? res.send(result) : res.redirect(req.get('Referer')));
-    });
+        req.xhr ? res.send(result) : res.redirect(req.get('Referer'))));
+  } else if (module.redirect) {
+    route.get((req, res) =>
+      module.redirect(req).then(url => res.redirect(url)));
+  } else if (module.view && module.model) {
+    route.get((req, res) =>
+      module.model(req).then(model => res.render(module.view, model)));
   } else {
-    router.get(route, (req, res) => {
-      logger.debug(`[routes:index] route [${route}] from file [${name}] is hit.`);
-
-      if (module.redirect) {
-        logger.debug(`[routes:index] route [${route}] provides redirect function.`);
-        module.redirect(req).then(url => res.redirect(url));
-      } else if (module.view && module.model) {
-        logger.debug(`[routes:index] route [${route}] provides render view function.`);
-        module.model(req).then(model => res.render(module.view, model));
-      } else {
-        logger.error(`[routes:index] route [${route}] does not provide any function.`);
-        res.status(500).end();
-      }
-    });
+    route.get((req, res) =>
+      res.status(500).end());
   }
 });
