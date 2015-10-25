@@ -31,7 +31,7 @@ routes.forEach(name => {
         module.redirect(req).then(url => res.redirect(url));
       } else if (module.view && module.model) {
         logger.debug(`[routes:index] route [${route}] provides render view function.`);
-        res.render(module.view, module.model(req));
+        module.model(req).then(model => res.render(module.view, model));
       } else {
         logger.error(`[routes:index] route [${route}] does not provide any function.`);
         res.status(500).end();

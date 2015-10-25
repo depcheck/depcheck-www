@@ -9,12 +9,13 @@ export const model = ({ session }) => {
   const login = loginModel.getUser(session);
   logger.debug(`[routes:home] get login user ${JSON.stringify(login)}`);
 
-  return !login
-  ? {}
-  : {
-    login,
-    url: {
-      repoList: `/${login.provider}/${login.user}`,
-    },
-  };
+  return Promise.resolve(
+    !login
+    ? {}
+    : {
+      login,
+      url: {
+        repoList: `/${login.provider}/${login.user}`,
+      },
+    });
 };
