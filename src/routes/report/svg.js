@@ -1,3 +1,4 @@
+import { logger } from '../../services';
 import * as reportModel from '../../models/report';
 
 export const route = '/:provider/:user/:repo/:branch/:report?.svg';
@@ -17,7 +18,12 @@ function toViewModel(report) {
 }
 
 export function model({ params }) {
-  return reportModel.get(params)
+  logger.debug(`[routes:report:svg] get report SVG view model with parameter ${JSON.stringify(params)}.`);
+
+  params.report = params.report || '';
+
+  return reportModel.query(params)
+  .then(([first]) => first || {})
   .then(report => toViewModel(report))
   .then(([caption, color]) => ({ caption, color }));
 }

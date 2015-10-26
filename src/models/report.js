@@ -1,31 +1,16 @@
 import { logger, table } from '../services';
 
-export function query({ provider, user, repo }) {
-  logger.debug(`[model:report] query reports with provider [${provider}], user [${user}] and repo [${repo}].`);
-  return table.query('report', {
-    filter: { provider, user, repo },
-  }).then(result => ({
-    provider,
-    user,
-    repo,
-    reports: result.map(item => ({
-      branch: item.branch,
-      report: item.report,
-      dependencies: JSON.parse(item.dependencies),
-      devDependencies: JSON.parse(item.devDependencies),
-    })),
-  }));
-}
+export function query(filter) {
+  logger.debug(`[model:report] query reports with filter ${JSON.stringify(filter)}.`);
 
-// TODO need refactor to merge with query function
-export function get(params) {
-  logger.debug(`[model:report] get report with parameter ${JSON.stringify(params)}.`);
-  const { branch, report = '' } = params;
-  return query(params)
-  .then(result =>
-    result.reports.filter(its =>
-      its.branch === branch && its.report === report))
-  .then(([first]) => first || {});
+  return table.query('report', { filter })
+  .then(reports =>
+    reports.map(report => ({
+      branch: report.branch,
+      report: report.report,
+      dependencies: JSON.parse(report.dependencies),
+      devDependencies: JSON.parse(report.devDependencies),
+    })));
 }
 
 export function upsert({ provider, user, repo, branch, report, result }) {
