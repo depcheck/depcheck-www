@@ -9,6 +9,7 @@ const routes = [
   'login',
   'login/callback',
   'token',
+  'report/svg', // must place the svg router before report/index.
 ];
 
 routes.forEach(name => {
@@ -30,7 +31,8 @@ routes.forEach(name => {
       module.redirect(req).then(url => res.redirect(url)));
   } else if (module.view && module.model) {
     route.get((req, res) =>
-      module.model(req).then(model => res.render(module.view, model)));
+      module.model(req).then(model =>
+        res.type(module.type || 'html').render(module.view, model)));
   } else {
     route.get((req, res) =>
       res.status(500).end());

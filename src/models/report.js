@@ -17,6 +17,7 @@ export function query({ provider, user, repo }) {
   }));
 }
 
+// TODO need refactor to merge with query function
 export function get(params) {
   logger.debug(`[model:report] get report with parameter ${JSON.stringify(params)}.`);
   const { branch, report = '' } = params;

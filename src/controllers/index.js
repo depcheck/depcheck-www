@@ -15,11 +15,6 @@ router.get('/:provider/:user', loginModel.validate, (req, res) =>
   .then(result => res.render('repo-list', result),
     error => res.send(error)));
 
-// must place the svg router before the next one.
-router.get('/:provider/:user/:repo/:branch/:report?.svg', (req, res) =>
-  reportModel.get(req.params)
-  .then(result => res.type('svg').render('badge', result)));
-
 router.route('/:provider/:user/:repo/:report?')
   .get(loginModel.validate, (req, res) =>
     reportModel.query(req.params)
