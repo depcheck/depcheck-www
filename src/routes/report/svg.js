@@ -7,10 +7,10 @@ export const type = 'svg';
 
 export const view = 'badge';
 
-function toViewModel(report) {
-  if (!report.dependencies || !report.devDependencies) {
+function toViewModel({ dependencies, devDependencies }) {
+  if (!dependencies || !devDependencies) {
     return ['unknown', '#9f9f9f'];
-  } else if (report.dependencies.length || report.devDependencies.length) {
+  } else if (dependencies.length || devDependencies.length) {
     return ['failing', '#e05d44'];
   }
 
@@ -24,6 +24,6 @@ export function model({ params }) {
 
   return reportModel.query(params)
   .then(([first]) => first || {})
-  .then(report => toViewModel(report))
+  .then(toViewModel)
   .then(([caption, color]) => ({ caption, color }));
 }
