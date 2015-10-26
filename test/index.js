@@ -30,26 +30,6 @@ describe('/provider/tester', () =>
       .expect(/other-2/)
       .end(done)));
 
-describe('/provider/tester/test-1/master.svg', () => {
-  it('should get a passing badge for report without unused dependencies', done =>
-    request(app)
-      .get('/provider/tester/test-1/master.svg')
-      .expect(200)
-      .expect(res => res.text = res.body.toString('utf8'))
-      .expect(/^<svg/)
-      .expect(/passing/)
-      .end(done));
-
-  it('should get a failing badge for report with unused dependencies', done =>
-    request(app)
-      .get('/provider/tester/test-1/master/fail.svg')
-      .expect(200)
-      .expect(res => res.text = res.body.toString('utf8'))
-      .expect(/^<svg/)
-      .expect(/failing/)
-      .end(done));
-});
-
 describe('/provider/tester/test-1', () => {
   it('should render the repo page', done =>
     request(app)

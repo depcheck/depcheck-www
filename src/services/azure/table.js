@@ -19,6 +19,7 @@ function buildTableQuery({ limit, filter }) {
 
   if (typeof filter === 'object') {
     const condition = Object.keys(filter)
+      .filter(key => filter[key] !== undefined)
       .map(key => `${key} eq ${serializeQueryValue(filter[key])}`)
       .join(' and ');
 
