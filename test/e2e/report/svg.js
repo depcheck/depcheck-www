@@ -59,6 +59,8 @@ describe('/provider/user/repo/branch.svg', () => {
         provider: 'e2e',
         user: 'tester',
         repo: 'project',
+        branch: 'failing',
+        report: '',
       });
     })
     .end(done);
@@ -81,6 +83,7 @@ describe('/provider/user/repo/branch.svg', () => {
         provider: 'e2e',
         user: 'tester',
         repo: 'project',
+        report: '',
       });
     })
     .end(done);
