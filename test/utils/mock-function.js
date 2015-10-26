@@ -3,7 +3,8 @@ export default function mockFunction(value) {
 
   function fn(...args) {
     calls.push(args);
-    return Promise.resolve(value);
+    const result = typeof value === 'function' ? value(...args) : value;
+    return Promise.resolve(result);
   }
 
   fn.calls = calls;

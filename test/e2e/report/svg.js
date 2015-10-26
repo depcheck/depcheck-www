@@ -1,22 +1,11 @@
 /* global describe, it */
 
 import stub from '../../utils/stub';
-
-function tableQuery(records) {
-  const calls = [];
-
-  function query(tableName, { filter }) {
-    calls.push({ tableName, filter });
-    return Promise.resolve(records);
-  }
-
-  query.calls = calls;
-  return query;
-}
+import mockFunction from '../../utils/mock-function';
 
 describe('/provider/user/repo/branch.svg', () => {
   it('should get a passing badge for report without unused dependencies', done => {
-    const query = tableQuery([{
+    const query = mockFunction([{
       provider: 'e2e',
       user: 'tester',
       repo: 'project',
@@ -35,8 +24,8 @@ describe('/provider/user/repo/branch.svg', () => {
     .expect(/^<svg/)
     .expect(/>passing</)
     .expect(() => {
-      query.calls[0].tableName.should.equal('report');
-      query.calls[0].filter.should.have.properties({
+      query.calls[0][0].should.equal('report');
+      query.calls[0][1].filter.should.have.properties({
         provider: 'e2e',
         user: 'tester',
         repo: 'project',
@@ -46,7 +35,7 @@ describe('/provider/user/repo/branch.svg', () => {
   });
 
   it('should get a failing badge for report with unused dependencies', done => {
-    const query = tableQuery([{
+    const query = mockFunction([{
       provider: 'e2e',
       user: 'tester',
       repo: 'project',
@@ -65,8 +54,8 @@ describe('/provider/user/repo/branch.svg', () => {
     .expect(/^<svg/)
     .expect(/>failing</)
     .expect(() => {
-      query.calls[0].tableName.should.equal('report');
-      query.calls[0].filter.should.have.properties({
+      query.calls[0][0].should.equal('report');
+      query.calls[0][1].filter.should.have.properties({
         provider: 'e2e',
         user: 'tester',
         repo: 'project',
@@ -76,7 +65,7 @@ describe('/provider/user/repo/branch.svg', () => {
   });
 
   it('should get an unknown badge for report which not exists', done => {
-    const query = tableQuery([]);
+    const query = mockFunction([]);
 
     stub({
       table: { query },
@@ -87,8 +76,8 @@ describe('/provider/user/repo/branch.svg', () => {
     .expect(/^<svg/)
     .expect(/>unknown</)
     .expect(() => {
-      query.calls[0].tableName.should.equal('report');
-      query.calls[0].filter.should.have.properties({
+      query.calls[0][0].should.equal('report');
+      query.calls[0][1].filter.should.have.properties({
         provider: 'e2e',
         user: 'tester',
         repo: 'project',
