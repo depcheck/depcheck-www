@@ -73,6 +73,7 @@ export default function fakeServices(stubs) {
         stubs.table.insert.push({ tableName, record });
         return Promise.resolve(record);
       },
+      query: (...args) => stubs.table.query(...args),
     },
   };
 }
