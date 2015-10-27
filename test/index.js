@@ -31,15 +31,6 @@ describe('/provider/tester', () =>
       .end(done)));
 
 describe('/provider/tester/test-1', () => {
-  it('should render the repo page', done =>
-    request(app)
-      .get('/provider/tester/test-1')
-      .expect(200)
-      .expect(/master/)
-      .expect(/fail/)
-      .expect(/unused/)
-      .end(done));
-
   it('should post to create a new report', done =>
     request(app)
       .post('/provider/tester/test-1')
