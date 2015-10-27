@@ -4,12 +4,21 @@ import { logger } from '../services';
 const router = new express.Router();
 export default router;
 
+function handleError(res) {
+  return (error) => {
+    // TODO implement more safe error handling
+    logger.warn(error);
+    res.status(error.code).send(error.message);
+  };
+}
+
 const routes = [
   'home',
   'login',
   'login/callback',
   'token',
-  'report/svg', // must place the svg router before report/index.
+  'report/svg', // report/svg must place before repo/report.
+  'repo/report',
 ];
 
 routes.forEach(name => {
@@ -23,16 +32,30 @@ routes.forEach(name => {
   });
 
   if (module.post) {
-    route.post((req, res) =>
-      module.post(req).then(result =>
-        req.xhr ? res.send(result) : res.redirect(req.get('Referer'))));
-  } else if (module.redirect) {
+    const middlewares = module.post.middlewares || [];
+    route.post(
+      ...middlewares,
+      (req, res) =>
+        module.post(req)
+          .then(result =>
+            // TODO leverage `res.format` to better content-negotiation
+            req.accepts('html') === 'html'
+            ? res.redirect(req.get('Referer'))
+            : res.send(result))
+          .catch(handleError(res)));
+  }
+
+  if (module.redirect) {
     route.get((req, res) =>
-      module.redirect(req).then(url => res.redirect(url)));
+      module.redirect(req)
+        .then(url => res.redirect(url)
+        .catch(handleError(res))));
   } else if (module.view && module.model) {
     route.get((req, res) =>
-      module.model(req).then(model =>
-        res.type(module.type || 'html').render(module.view, model)));
+      module.model(req)
+        .then(model =>
+          res.type(module.type || 'html').render(module.view, model))
+        .catch(handleError(res)));
   } else {
     route.get((req, res) =>
       res.status(500).end());

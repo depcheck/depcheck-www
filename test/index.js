@@ -29,39 +29,3 @@ describe('/provider/tester', () =>
       .expect(/other-1/)
       .expect(/other-2/)
       .end(done)));
-
-describe('/provider/tester/test-1', () => {
-  it('should render the repo page', done =>
-    request(app)
-      .get('/provider/tester/test-1')
-      .expect(200)
-      .expect(/master/)
-      .expect(/fail/)
-      .expect(/unused/)
-      .end(done));
-
-  it('should post to create a new report', done =>
-    request(app)
-      .post('/provider/tester/test-1')
-      .send({
-        token: 'fake-token',
-        branch: 'test',
-        report: 'new',
-        result: {
-          dependencies: ['dep'],
-          devDependencies: ['devDep'],
-        },
-      })
-      .expect(200)
-      .expect({
-        branch: 'test',
-        id: 'provider:tester:test-1-$KEY$-test:new',
-        provider: 'provider',
-        repo: 'test-1',
-        report: 'new',
-        user: 'tester',
-        dependencies: JSON.stringify(['dep']),
-        devDependencies: JSON.stringify(['devDep']),
-      })
-      .end(done));
-});
