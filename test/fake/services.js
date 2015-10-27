@@ -71,6 +71,7 @@ export default function fakeServices(stubs) {
     table: {
       insert: (...args) => stubs.table.insert(...args),
       query: (...args) => stubs.table.query(...args),
+      upsert: (...args) => stubs.table.upsert(...args),
     },
   };
 }
