@@ -24,10 +24,16 @@ routes.forEach(name => {
   });
 
   if (module.post) {
-    route.post((req, res) =>
-      module.post(req).then(result =>
-        req.xhr ? res.send(result) : res.redirect(req.get('Referer'))));
-  } else if (module.redirect) {
+    const middlewares = module.post.middlewares || [];
+    route.post(
+      ...middlewares,
+      (req, res) =>
+        module.post(req).then(result =>
+          // TODO negotiate with req Accept filed to response result
+          req.xhr ? res.send(result) : res.redirect(req.get('Referer'))));
+  }
+
+  if (module.redirect) {
     route.get((req, res) =>
       module.redirect(req).then(url => res.redirect(url)));
   } else if (module.view && module.model) {
