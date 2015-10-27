@@ -4,6 +4,14 @@ import { logger } from '../services';
 const router = new express.Router();
 export default router;
 
+function handleError(res) {
+  return (error) => {
+    // TODO implement more safe error handling
+    logger.warn(error);
+    res.status(error.code).send(error.message);
+  };
+}
+
 const routes = [
   'home',
   'login',
@@ -28,18 +36,26 @@ routes.forEach(name => {
     route.post(
       ...middlewares,
       (req, res) =>
-        module.post(req).then(result =>
-          // TODO negotiate with req Accept filed to response result
-          req.xhr ? res.send(result) : res.redirect(req.get('Referer'))));
+        module.post(req)
+          .then(result =>
+            // TODO leverage `res.format` to better content-negotiation
+            req.accepts('html') === 'html'
+            ? res.redirect(req.get('Referer'))
+            : res.send(result))
+          .catch(handleError(res)));
   }
 
   if (module.redirect) {
     route.get((req, res) =>
-      module.redirect(req).then(url => res.redirect(url)));
+      module.redirect(req)
+        .then(url => res.redirect(url)
+        .catch(handleError(res))));
   } else if (module.view && module.model) {
     route.get((req, res) =>
-      module.model(req).then(model =>
-        res.type(module.type || 'html').render(module.view, model)));
+      module.model(req)
+        .then(model =>
+          res.type(module.type || 'html').render(module.view, model))
+        .catch(handleError(res)));
   } else {
     route.get((req, res) =>
       res.status(500).end());
