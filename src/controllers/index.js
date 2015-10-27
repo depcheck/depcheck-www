@@ -16,16 +16,6 @@ router.get('/:provider/:user', loginModel.validate, (req, res) =>
     error => res.send(error)));
 
 router.route('/:provider/:user/:repo/:report?')
-  .get(loginModel.validate, (req, res) =>
-    reportModel.query(req.params)
-    .then(result => ({
-      provider: req.params.provider,
-      user: req.params.user,
-      repo: req.params.repo,
-      reports: result,
-    }))
-    .then(result => res.render('repo', result),
-      error => res.send(error)))
   .post(jsonParser, (req, res) =>
     tokenModel.validate({ ...req.params, token: req.body.token })
     .then(() => reportModel.upsert({ ...req.params, ...req.body }))

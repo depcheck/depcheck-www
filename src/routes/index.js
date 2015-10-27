@@ -9,7 +9,8 @@ const routes = [
   'login',
   'login/callback',
   'token',
-  'report/svg', // must place the svg router before report/index.
+  'report/svg', // report/svg must place before repo/report.
+  'repo/report',
 ];
 
 routes.forEach(name => {
