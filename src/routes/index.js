@@ -18,6 +18,7 @@ const routes = [
   'login/callback',
   'token',
   'report/svg', // report/svg must place before repo/report.
+  'repo',
   'repo/report',
 ];
 
