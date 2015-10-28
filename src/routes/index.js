@@ -1,9 +1,6 @@
 import express from 'express';
 import { logger } from '../services';
 
-const router = new express.Router();
-export default router;
-
 function handleError(res) {
   return (error) => {
     // TODO implement more safe error handling
@@ -12,52 +9,55 @@ function handleError(res) {
   };
 }
 
-const routes = [
-  'home',
-  'login',
-  'login/callback',
-  'token',
-  'report/svg', // report/svg must place before repo/report.
-  'repo/report',
-];
+function register(router, route, name, method) {
+  return (middlewares = [], fn) => {
+    router[method](route, ...middlewares, (req, res) => {
+      logger.debug(`[routes] request [${method}] URL [${req.url}], hit route [${route}] from file [${name}].`);
+      fn(req, res).catch(handleError(res));
+    });
+  };
+}
 
-routes.forEach(name => {
-  const module = require(`./${name}`);
-  const route = router.route(module.route);
+function createRouter() {
+  const router = new express.Router();
 
-  logger.debug(`[routes] route [${module.route}] from file [${name}] provides functions [${Object.keys(module)}].`);
-  route.all((req, res, next) => {
-    logger.debug(`[routes] request [${req.method}] path [${req.url}], hit route [${module.route}] from file [${name}].`);
-    next();
+  const routes = [
+    'home',
+    'login',
+    'login/callback',
+    'token',
+    'report/svg', // report/svg must place before repo/report.
+    'repo',
+    'repo/report',
+  ];
+
+  routes.forEach(name => {
+    const module = require(`./${name}`);
+    const get = register(router, module.route, name, 'get');
+    const post = register(router, module.route, name, 'post');
+
+    logger.debug(`[routes] route [${module.route}] from file [${name}] provides functions [${Object.keys(module)}].`);
+
+    if (module.post) {
+      post(module.post.middlewares, (req, res) =>
+        module.post(req).then(result =>
+          // TODO leverage `res.format` to better content-negotiation
+          req.accepts('html') === 'html'
+          ? res.redirect(req.get('Referer'))
+          : res.send(result)));
+    }
+
+    if (module.redirect) {
+      get(module.redirect.middlewares, (req, res) =>
+        module.redirect(req).then(url => res.redirect(url)));
+    } else if (module.view && module.model) {
+      get(module.model.middlewares, (req, res) =>
+        module.model(req).then(model =>
+          res.type(module.type || 'html').render(module.view, model)));
+    }
   });
 
-  if (module.post) {
-    const middlewares = module.post.middlewares || [];
-    route.post(
-      ...middlewares,
-      (req, res) =>
-        module.post(req)
-          .then(result =>
-            // TODO leverage `res.format` to better content-negotiation
-            req.accepts('html') === 'html'
-            ? res.redirect(req.get('Referer'))
-            : res.send(result))
-          .catch(handleError(res)));
-  }
+  return router;
+}
 
-  if (module.redirect) {
-    route.get((req, res) =>
-      module.redirect(req)
-        .then(url => res.redirect(url)
-        .catch(handleError(res))));
-  } else if (module.view && module.model) {
-    route.get((req, res) =>
-      module.model(req)
-        .then(model =>
-          res.type(module.type || 'html').render(module.view, model))
-        .catch(handleError(res)));
-  } else {
-    route.get((req, res) =>
-      res.status(500).end());
-  }
-});
+export default createRouter();

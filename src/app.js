@@ -2,7 +2,6 @@ import path from 'path';
 import express from 'express';
 import react from 'express-react-views';
 import routes from './routes';
-import controller from './controllers';
 import { logger, session } from './services';
 
 const app = express();
@@ -36,4 +35,4 @@ app.use((req, res, next) => {
 
 app.use(session);
 
-app.use('/', routes, controller);
+app.use(routes);

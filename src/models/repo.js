@@ -32,13 +32,5 @@ export function query({ provider, user }) {
   const queryToken = tokenModel.query({ provider, user });
 
   return Promise.all([queryRepo, queryToken])
-  .then(([repos, tokens]) => ({
-    provider,
-    user,
-    repos: mapTokenToRepo(tokens, repos).map(repo => ({
-      ...repo,
-      repoUrl: `/${provider}/${user}/${repo.name}`,
-      requestTokenUrl: `/token/${provider}/${user}/${repo.name}`,
-    })),
-  }));
+  .then(([repos, tokens]) => mapTokenToRepo(tokens, repos));
 }
