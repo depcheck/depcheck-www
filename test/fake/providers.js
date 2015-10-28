@@ -34,5 +34,6 @@ export default function fakeProviders({ providers = {} }) {
   return {
     getLoginUrl: providers.getLoginUrl,
     getUser: providers.getUser,
+    query: providers.query,
   };
 }
