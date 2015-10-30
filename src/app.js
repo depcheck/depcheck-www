@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+import favicon from 'serve-favicon';
 import react from 'express-react-views';
 import routes from './routes';
 import { logger, session } from './services';
@@ -32,6 +33,8 @@ app.use((req, res, next) => {
   logger.debug(`[app] request [${req.method}] route [${req.url}].`);
   next();
 });
+
+app.use(favicon(path.resolve(__dirname, '../artifact/favicon.ico')));
 
 app.use(session);
 
