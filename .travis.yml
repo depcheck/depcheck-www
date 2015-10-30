@@ -4,6 +4,7 @@ node_js:
   - 'node'
 
 script:
+  - npm run depcheck -- --web-report
   - npm run build-azure
   - npm run build
   - npm run test-coveralls
