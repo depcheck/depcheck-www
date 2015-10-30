@@ -36,6 +36,10 @@ app.use((req, res, next) => {
 
 app.use(favicon(path.resolve(__dirname, '../artifact/favicon.ico')));
 
+app.use('/assets',
+  // Bootstrap
+  express.static(path.resolve(__dirname, '../node_modules/bootstrap/dist')));
+
 app.use(session);
 
 app.use(routes);
