@@ -8,6 +8,7 @@ Integrate with [depcheck](https://github.com/lijunle/depcheck-es6) to show the r
 
 [![Build Status](https://travis-ci.org/lijunle/depcheck-web.svg?branch=master)](https://travis-ci.org/lijunle/depcheck-web)
 [![Coverage Status](https://coveralls.io/repos/lijunle/depcheck-web/badge.svg?branch=master&service=github)](https://coveralls.io/github/lijunle/depcheck-web?branch=master)
+[![Depcheck](https://depcheck.tk/github/lijunle/depcheck-web/master.svg)](https://github.com/lijunle/depcheck-web)
 
 ## Usage
 
