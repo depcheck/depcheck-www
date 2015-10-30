@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "babel-node ./node_modules/gulp/bin/gulp.js lint",
-    "depcheck": "depcheck --ignore-bin-package=false --specials=bin,eslint",
+    "depcheck": "depcheck --ignore-bin-package=false --specials=bin,eslint --ignores bootstrap",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
     "build-azure": "babel-node ./node_modules/gulp/bin/gulp.js build-azure",
     "test": "mocha --compilers js:babel/register --recursive ./test",
