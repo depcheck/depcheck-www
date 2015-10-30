@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "babel-node ./node_modules/gulp/bin/gulp.js lint",
-    "depcheck": "depcheck --ignore-bin-package=false --specials=bin,eslint",
+    "depcheck": "depcheck --ignore-bin-package=false --specials=bin,eslint --ignores bootstrap",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
     "build-azure": "babel-node ./node_modules/gulp/bin/gulp.js build-azure",
     "test": "mocha --compilers js:babel/register --recursive ./test",
@@ -20,6 +20,7 @@
   "dependencies": {
     "azure-storage": "^0.6.0",
     "body-parser": "^1.14.1",
+    "bootstrap": "^3.3.5",
     "express": "^4.13.3",
     "express-react-views": "^0.9.0",
     "express-session": "^1.11.3",
@@ -28,6 +29,7 @@
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "request": "^2.65.0",
+    "serve-favicon": "^2.3.0",
     "session-file-store": "0.0.21",
     "winston": "^1.1.0",
     "winston-azuretable": "^1.0.3"

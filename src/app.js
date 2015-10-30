@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+import favicon from 'serve-favicon';
 import react from 'express-react-views';
 import routes from './routes';
 import { logger, session } from './services';
@@ -32,6 +33,14 @@ app.use((req, res, next) => {
   logger.debug(`[app] request [${req.method}] route [${req.url}].`);
   next();
 });
+
+app.use(favicon(path.resolve(__dirname, '../artifact/favicon.ico')));
+
+app.use('/assets',
+  // Artifact
+  express.static(path.resolve(__dirname, '../artifact')),
+  // Bootstrap
+  express.static(path.resolve(__dirname, '../node_modules/bootstrap/dist')));
 
 app.use(session);
 
