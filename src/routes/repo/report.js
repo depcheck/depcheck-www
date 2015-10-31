@@ -18,7 +18,15 @@ export function model({
     provider,
     user,
     repo,
-    reports,
+    reports: reports.map(report => ({
+      ...report,
+      caption: report.report
+        ? `${report.branch}/${report.report}`
+        : report.branch,
+      badgeUrl: report.report
+        ? `/${provider}/${user}/${repo}/${report.branch}/${report.report}.svg`
+        : `/${provider}/${user}/${repo}/${report.branch}.svg`,
+    })),
   }));
 }
 
