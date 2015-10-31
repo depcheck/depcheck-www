@@ -13,12 +13,25 @@ export function model({
     params: { provider, user, repo },
   }) {
   return loginModel.validate({ url, session })
-  .then(() => reportModel.query({ provider, user, repo }))
-  .then(reports => ({
+  .then(() => Promise.all([
+    reportModel.query({ provider, user, repo }),
+    tokenModel.get({ provider, user, repo }).catch(() => undefined),
+  ]))
+  .then(([reports, token]) => ({
     provider,
     user,
     repo,
-    reports,
+    token,
+    tokenUrl: `/token/${provider}/${user}/${repo}`,
+    reports: reports.map(report => ({
+      ...report,
+      caption: report.report
+        ? `${report.branch}/${report.report}`
+        : report.branch,
+      badgeUrl: report.report
+        ? `/${provider}/${user}/${repo}/${report.branch}/${report.report}.svg`
+        : `/${provider}/${user}/${repo}/${report.branch}.svg`,
+    })),
   }));
 }
 

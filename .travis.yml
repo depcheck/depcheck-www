@@ -5,7 +5,6 @@ node_js:
 
 script:
   - npm run depcheck -- --web-report
-  - npm run build-azure
   - npm run build
   - npm run test-coveralls
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
