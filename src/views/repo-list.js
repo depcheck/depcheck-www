@@ -1,34 +1,47 @@
 import React from 'react';
 import Layout from './layout';
 
-const Token = ({ token, url }) =>
-  token
-  ? <code>{token}</code>
-  : (
-    <form method="post" action={url}>
-      <input type="submit" value="Enable" />
-    </form>
-  );
+const Badge = ({ badgeUrl }) => (
+  <span> <img src={badgeUrl} /></span>
+);
 
-const Repo = ({ name, description, token, repoUrl, requestTokenUrl }) => (
+const Repo = ({ name, description, enabled, repoUrl, badgeUrl }) => (
   <li>
-    <h4><a href={repoUrl}>{name}</a></h4>
+    <h4>
+      <a href={repoUrl}>{name}</a>
+      {enabled ? <Badge badgeUrl={badgeUrl} /> : null}
+    </h4>
     <p>{description}</p>
-    <div>Token: <Token token={token} url={requestTokenUrl} /></div>
   </li>
+);
+
+const RepoList = ({ repos }) => (
+  <ul className="list-unstyled">
+    {repos.map(repo => <Repo key={repo.name} {...repo} />)}
+  </ul>
 );
 
 export default React.createClass({
   render() {
     return (
       <Layout>
-        <h1>Repo List</h1>
-        <p>Hi, {this.props.provider}/{this.props.user}!</p>
-        <ul>
-        {
-          this.props.repos.map(repo => <Repo key={repo.name} {...repo} />)
-        }
-        </ul>
+        <h1 className="text-center">
+          Repository
+        </h1>
+        <h5 className="text-center">
+          from <mark>{this.props.provider}/{this.props.user}</mark>
+        </h5>
+        <div className="row">
+          <div className="col-md-8 col-md-offset-2">
+            <RepoList repos={this.props.enabled} />
+            <hr />
+            <RepoList repos={this.props.disabled} />
+            <hr />
+            <h3>Invalid Repositories</h3>
+            <p>The following repositories have been removed from {this.props.provider}, and become invalid.</p>
+            <RepoList repos={this.props.invalid} />
+          </div>
+        </div>
       </Layout>
     );
   },

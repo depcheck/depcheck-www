@@ -1,51 +1,90 @@
 import React from 'react';
 import Layout from './layout';
 
-const codeSnippet = `
-{
-  "token": "00a9a10d-c1c4-0686-a6e3-c955ee6f0515",
-  "branch": "master",
-  "report": "",
-  "result": {
-    "dependencies": ["a"],
-    "devDependencies": ["b", "c"]
-  }
-}`;
+const Badge = ({ badgeUrl }) => (
+  <span> <img src={badgeUrl} /></span>
+);
 
-const Report = ({ branch, report, dependencies, devDependencies }) => (
+const Dependencies = ({ caption, dependencies }) => (
+  <div>
+  {
+    dependencies.length
+    ? (
+      <p>
+        <b>{caption} </b>
+        {dependencies.map(dep => <span key={dep}><a>{dep}</a> </span>)}
+      </p>
+    )
+    : null
+  }
+  </div>
+);
+
+const Report = ({ caption, dependencies, devDependencies, badgeUrl }) => (
   <li>
-    <p>Branch: {branch}</p>
-    <p>Report: {report}</p>
-    <div>
-      <p>Unused dependencies</p>
-      <ul>{dependencies.map(dep => <li key={dep}>{dep}</li>)}</ul>
-    </div>
-    <div>
-      <p>Unused devDependencies</p>
-      <ul>{devDependencies.map(dep => <li key={dep}>{dep}</li>)}</ul>
+    <div className="panel panel-default">
+      <div className="panel-heading">
+        {caption}
+        <Badge badgeUrl={badgeUrl} />
+      </div>
+      <div className="panel-body">
+        {
+          !dependencies.length && !devDependencies.length
+          ? <p>Everything is good in this report, there is no unused dependencies.</p>
+          : null
+        }
+        <Dependencies
+          caption="Unused dependencies"
+          dependencies={dependencies}
+        />
+        <Dependencies
+          caption="Unused devDependencies"
+          dependencies={devDependencies}
+        />
+      </div>
     </div>
   </li>
 );
+
+const Token = ({ repo, token, url }) =>
+  token
+  ? (
+    <div>
+      <p><b>Repository token</b>: <code>{token}</code></p>
+      <p>Please keep the token security. Follow the <a>depcheck tutorial</a> to enjoy it.</p>
+    </div>
+  )
+  : (
+    <form method="post" action={url}>
+      <p>Repository {repo} is not enabled for depcheck. Enable it with the below button, and follow the <a>depcheck tutorial</a> to enjoy it.</p>
+      <input className="btn btn-success pull-right" type="submit" value="Enable Depcheck" />
+    </form>
+  );
 
 export default React.createClass({
   render() {
     return (
       <Layout>
-        <h1>Repository {this.props.repo}</h1>
-        <h4>From {this.props.provider}/{this.props.user}!</h4>
-        <div>
-          <p>Reports</p>
-          <ul>
-          {
-            this.props.reports.map(report =>
-              <Report key={`${report.branch}/${report.report}`} {...report}/>)
-          }
-          </ul>
-        </div>
-        <div>
-          <p>Example</p>
-          <p>POST <code>/github/lijunle/depcheck-web</code></p>
-          <pre>{codeSnippet}</pre>
+        <h1 className="text-center">
+          {this.props.repo}
+        </h1>
+        <h5 className="text-center">
+          from <mark>{this.props.provider}/{this.props.user}</mark>
+        </h5>
+        <div className="row">
+          <div className="col-md-8 col-md-offset-2">
+            <ul className="list-unstyled">
+            {
+              this.props.reports.map(report =>
+                <Report key={report.caption} {...report}/>)
+            }
+            </ul>
+            <Token
+              repo={this.props.repo}
+              token={this.props.token}
+              url={this.props.tokenUrl}
+            />
+          </div>
         </div>
       </Layout>
     );
