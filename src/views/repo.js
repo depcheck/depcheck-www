@@ -28,6 +28,11 @@ const Report = ({ caption, dependencies, devDependencies, badgeUrl }) => (
         <Badge badgeUrl={badgeUrl} />
       </div>
       <div className="panel-body">
+        {
+          !dependencies.length && !devDependencies.length
+          ? <p>Everything is good in this report, there is no unused dependencies.</p>
+          : null
+        }
         <Dependencies
           caption="Unused dependencies"
           dependencies={dependencies}
