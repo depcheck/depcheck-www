@@ -11,21 +11,23 @@ describe('view repo', () => {
       repo: 'project',
       reports: [
         {
+          caption: 'master',
           branch: 'master',
           report: '',
           dependencies: ['unused-dep'],
           devDependencies: ['unused-devDep'],
+          badgeUrl: '/badge/master',
         },
       ],
     });
 
-    query('h1').text().should.containEql('project');
-    query('h4').text().should.containEql('views/tester');
+    query('h1').text().should.equal('project');
+    query('h5').text().should.equal('from views/tester');
 
     const masterReport = query('ul li').eq(0);
     masterReport.should.be.ok();
-    masterReport.find('p').eq(0).text().should.containEql('master');
-    masterReport.find('div ul').eq(0).text().should.containEql('unused-dep');
-    masterReport.find('div ul').eq(1).text().should.containEql('unused-devDep');
+    masterReport.find('.panel-heading').text().trim().should.containEql('master');
+    masterReport.find('p').eq(0).text().should.containEql('unused-dep');
+    masterReport.find('p').eq(1).text().should.containEql('unused-devDep');
   });
 });
