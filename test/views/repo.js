@@ -33,14 +33,32 @@ describe('view repo', () => {
           devDependencies: ['unused-devDep'],
           badgeUrl: '/badge/master',
         },
+        {
+          caption: 'master/passing',
+          branch: 'master',
+          report: 'passing',
+          dependencies: [],
+          devDependencies: [],
+          badgeUrl: '/badge/master/passing',
+        },
       ],
     });
 
     const masterReport = query('ul li').eq(0);
     masterReport.should.be.ok();
-    masterReport.find('.panel-heading').text().trim().should.containEql('master');
-    masterReport.find('p').eq(0).text().should.containEql('unused-dep');
-    masterReport.find('p').eq(1).text().should.containEql('unused-devDep');
+    masterReport.find('.panel-heading').text().trim()
+      .should.containEql('master');
+    masterReport.find('.panel-heading img').attr('src')
+      .should.equal('/badge/master');
+    masterReport.find('p').eq(0).text()
+      .should.containEql('unused-dep');
+    masterReport.find('p').eq(1).text()
+      .should.containEql('unused-devDep');
+
+    const passReport = query('ul li').eq(1);
+    passReport.should.be.ok();
+    passReport.find('.panel-body').text()
+      .should.containEql('no unused dependencies');
   });
 
   it('should render request token button if not enabled', () => {
