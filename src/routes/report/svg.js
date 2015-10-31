@@ -9,12 +9,12 @@ export const view = 'badge';
 
 function toViewModel({ dependencies, devDependencies }) {
   if (!dependencies || !devDependencies) {
-    return ['unknown', '#9f9f9f'];
+    return ['unknown', '#9f9f9f', 122];
   } else if (dependencies.length || devDependencies.length) {
-    return ['failing', '#e05d44'];
+    return ['failing', '#e05d44', 107];
+  } else { // eslint-disable-line no-else-return
+    return ['passing', '#4c1', 119];
   }
-
-  return ['passing', '#4c1'];
 }
 
 export function model({ params }) {
@@ -25,5 +25,5 @@ export function model({ params }) {
   return reportModel.query(params)
   .then(([first]) => first || {})
   .then(toViewModel)
-  .then(([caption, color]) => ({ caption, color }));
+  .then(([caption, color, width]) => ({ caption, color, width }));
 }
