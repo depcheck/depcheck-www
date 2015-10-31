@@ -2,27 +2,23 @@ import * as tokenModel from './token';
 import { logger } from '../services';
 import { getProvider } from '../providers';
 
-function mapTokenToRepo(tokens, repos) {
-  const repoLookup = repos.reduce((result, repo) => ({
-    ...result,
-    [repo.name]: repo,
-  }), {});
+function toModel(repos, tokens) {
+  const repoMap = new Map(repos.map(repo => [repo.name, repo]));
+  const invalid = [];
 
-  const tokenLookup = tokens.reduce((result, token) => {
-    if (result[token.repo]) {
-      result[token.repo].token = token.token;
+  for (const token of tokens) {
+    const repo = repoMap.get(token.repo);
+    if (repo) {
+      repo.token = token.token;
     } else {
-      result[token.repo] = {
+      invalid.push({
         name: token.repo,
-        token: token.token,
         invalid: true,
-      };
+      });
     }
+  }
 
-    return result;
-  }, repoLookup);
-
-  return Object.keys(tokenLookup).map(key => tokenLookup[key]);
+  return repos.concat(invalid);
 }
 
 export function query({ provider, user }) {
@@ -32,5 +28,5 @@ export function query({ provider, user }) {
   const queryToken = tokenModel.query({ provider, user });
 
   return Promise.all([queryRepo, queryToken])
-  .then(([repos, tokens]) => mapTokenToRepo(tokens, repos));
+  .then(([repos, tokens]) => toModel(repos, tokens));
 }
