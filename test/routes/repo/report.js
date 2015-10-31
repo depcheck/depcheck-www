@@ -14,6 +14,7 @@ describe('route repo report', () => {
   it('should call and return repo basic information', () => {
     const validate = mockFunction();
     const query = mockFunction([]);
+    const get = mockFunction('project-token');
 
     const repo = route('repo/report', {
       '../../models/login': {
@@ -22,15 +23,21 @@ describe('route repo report', () => {
       '../../models/report': {
         query,
       },
+      '../../models/token': {
+        get,
+      },
     });
 
     return repo.model({ params: info })
-    .then(model => model.should.have.properties(info))
+    .then(model => model.should.have.properties(info)
+      .and.have.properties({ token: 'project-token' })
+      .and.have.property('reports').have.length(0))
     .then(() => query.calls[0][0].should.have.properties(info));
   });
 
   it('should return the reports', () => {
     const validate = mockFunction();
+    const get = mockFunction('project-token');
     const query = mockFunction([
       {
         branch: 'branch-1',
@@ -48,6 +55,9 @@ describe('route repo report', () => {
       },
       '../../models/report': {
         query,
+      },
+      '../../models/token': {
+        get,
       },
     });
 
@@ -69,5 +79,29 @@ describe('route repo report', () => {
         badgeUrl: '/routes/tester/project/branch-2.svg',
       });
     });
+  });
+
+  it('should set token properly when repo not enabled', () => {
+    const validate = mockFunction();
+    const query = mockFunction([]);
+    const get = mockFunction(() => Promise.reject('not enabled'));
+
+    const repo = route('repo/report', {
+      '../../models/login': {
+        validate,
+      },
+      '../../models/report': {
+        query,
+      },
+      '../../models/token': {
+        get,
+      },
+    });
+
+    return repo.model({ params: info })
+    .then(model => model.should.have.properties({
+      token: undefined,
+      tokenUrl: '/token/routes/tester/project',
+    }));
   });
 });

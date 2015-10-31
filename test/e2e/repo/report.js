@@ -6,12 +6,15 @@ import mockFunction from '../../utils/mock-function';
 
 describe('/provider/user/repo', () => {
   it('should render the repo page', done => {
-    const query = mockFunction([{
-      branch: 'master',
-      report: 'passing',
-      dependencies: JSON.stringify(['unused-dep']),
-      devDependencies: JSON.stringify(['unused-devDep']),
-    }]);
+    const query = mockFunction(tableName =>
+      tableName === 'report'
+      ? [{
+        branch: 'master',
+        report: 'passing',
+        dependencies: JSON.stringify(['unused-dep']),
+        devDependencies: JSON.stringify(['unused-devDep']),
+      }]
+      : ['project-token']);
 
     stub({
       session: {
@@ -23,6 +26,8 @@ describe('/provider/user/repo', () => {
     })
     .get('/e2e/tester/project')
     .expect(200)
+    .expect(/project/)
+    .expect(/e2e\/tester/)
     .expect(/master/)
     .expect(/passing/)
     .expect(/unused-dep/)
@@ -34,7 +39,28 @@ describe('/provider/user/repo', () => {
         user: 'tester',
         repo: 'project',
       });
+      query.calls[1][0].should.equal('token');
+      query.calls[1][1].should.have.properties({ limit: 1 })
+        .and.have.property('filter').have.property('id');
     })
+    .end(done);
+  });
+
+  it('should render repo page to request token', done => {
+    const query = mockFunction([]);
+
+    stub({
+      session: {
+        login: '/e2e/tester',
+      },
+      table: {
+        query,
+      },
+    })
+    .get('/e2e/tester/project')
+    .expect(200)
+    .expect(/not enabled/)
+    .expect(/Enable Depcheck/)
     .end(done);
   });
 
