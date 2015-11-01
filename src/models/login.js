@@ -18,7 +18,7 @@ export function getUser({ login } = {}) {
   return { provider, user };
 }
 
-function validate2({ url, session: { login } }) {
+export function validate({ url, session: { login } }) {
   logger.debug(`[model:login] validate request [${url}] with session login ${JSON.stringify(login)}.`);
   return new Promise((resolve, reject) => {
     if (url.indexOf(login) === 0 || url.indexOf(`/token${login}`) === 0) {
@@ -32,22 +32,4 @@ function validate2({ url, session: { login } }) {
       });
     }
   });
-}
-
-export function validate(req, res, next) {
-  if (!next) {
-    // TODO replace validate with validate2 after all converted to routes pattern.
-    return validate2(req);
-  }
-
-  const url = req.url;
-  const login = req.session.login;
-  logger.debug(`[model:login] validate request [${url}] with session login ${JSON.stringify(login)}.`);
-  if (url.indexOf(login) === 0 || url.indexOf(`/token${login}`) === 0) {
-    logger.debug(`[model:login] validate request [${url}] succeed, move to next middleware.`);
-    next();
-  } else {
-    logger.info(`[model:login] validate request [${url}] fail.`);
-    res.status(401).end('Unanthorized, please login in.');
-  }
 }
