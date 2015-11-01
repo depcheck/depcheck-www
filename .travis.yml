@@ -8,6 +8,7 @@ script:
   - npm run build
   - npm run test-coveralls
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js
 
 deploy:
   provider: azure_web_apps
