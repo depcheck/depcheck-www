@@ -1,5 +1,6 @@
 import { compile } from 'path-to-regexp';
 import { logger } from '../../services';
+import { url as badgeUrl } from '../report/svg';
 import * as repoModel from '../../models/repo';
 import * as loginModel from '../../models/login';
 
@@ -15,9 +16,12 @@ function filterEnabled(provider, user, repos) {
     token: undefined, // hide token from this view model
     enabled: true,
     repoUrl: `/${provider}/${user}/${repo.name}`,
-
-    // TODO query master branch from provider
-    badgeUrl: `/${provider}/${user}/${repo.name}/master.svg`,
+    badgeUrl: badgeUrl({
+      provider,
+      user,
+      repo: repo.name,
+      branch: 'master', // TODO query master branch from provider
+    }),
   }));
 }
 

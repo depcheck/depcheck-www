@@ -2,6 +2,7 @@ import bodyParser from 'body-parser';
 import * as loginModel from '../../models/login';
 import * as tokenModel from '../../models/token';
 import * as reportModel from '../../models/report';
+import { url as badgeUrl } from '../report/svg';
 
 export const route = '/:provider/:user/:repo';
 
@@ -27,9 +28,13 @@ export function model({
       caption: report.report
         ? `${report.branch}/${report.report}`
         : report.branch,
-      badgeUrl: report.report
-        ? `/${provider}/${user}/${repo}/${report.branch}/${report.report}.svg`
-        : `/${provider}/${user}/${repo}/${report.branch}.svg`,
+      badgeUrl: badgeUrl({
+        provider,
+        user,
+        repo,
+        branch: report.branch,
+        report: report.report,
+      }),
     })),
   }));
 }

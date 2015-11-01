@@ -1,7 +1,15 @@
+import { compile } from 'path-to-regexp';
 import { logger } from '../../services';
 import * as reportModel from '../../models/report';
 
 export const route = '/:provider/:user/:repo/:branch/:report?.svg';
+
+const build = compile(route);
+export const url = (opts) => {
+  // not generate report segment if it is empty name
+  if (!opts.report) opts.report = undefined;
+  return build(opts);
+};
 
 export const type = 'svg';
 
