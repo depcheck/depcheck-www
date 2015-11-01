@@ -23,9 +23,9 @@ const Login = () => (
   </p>
 );
 
-const Welcome = ({ login, url }) => (
+const Welcome = ({ login, repoListUrl }) => (
   <p>
-    Logged in as <mark>{login.provider}/{login.user}</mark>. Go to <a href={url.repoList}>repository list</a>.
+    Logged in as <mark>{login.provider}/{login.user}</mark>. Go to <a href={repoListUrl}>repository list</a>.
   </p>
 );
 
