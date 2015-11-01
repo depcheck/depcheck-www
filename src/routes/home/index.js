@@ -1,5 +1,6 @@
 import * as loginModel from '../../models/login';
 import { logger } from '../../services';
+import { url as repoUrl } from '../repo';
 
 export const route = '/';
 
@@ -11,6 +12,6 @@ export const model = ({ session }) => {
 
   return Promise.resolve({
     login,
-    repoListUrl: login ? `/${login.provider}/${login.user}` : null,
+    repoListUrl: login ? repoUrl(login) : null,
   });
 };
