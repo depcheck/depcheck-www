@@ -8,11 +8,10 @@ export const route = '/:provider/:user/:repo';
 export const view = 'repo';
 
 export function model({
-    url,
     session,
     params: { provider, user, repo },
   }) {
-  return loginModel.validate({ url, session })
+  return loginModel.validate({ provider, user, session })
   .then(() => Promise.all([
     reportModel.query({ provider, user, repo }),
     tokenModel.get({ provider, user, repo }).catch(() => undefined),
