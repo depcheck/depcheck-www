@@ -4,6 +4,7 @@ import * as loginModel from '../../models/login';
 import * as tokenModel from '../../models/token';
 import * as reportModel from '../../models/report';
 import { url as badgeUrl } from '../report/svg';
+import { url as tokenUrl } from '../token';
 
 export const route = '/:provider/:user/:repo';
 
@@ -25,7 +26,11 @@ export function model({
     user,
     repo,
     token,
-    tokenUrl: `/token/${provider}/${user}/${repo}`,
+    tokenUrl: tokenUrl({
+      provider,
+      user,
+      repo,
+    }),
     reports: reports.map(report => ({
       ...report,
       caption: report.report
