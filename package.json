@@ -12,9 +12,9 @@
     "depcheck": "depcheck --ignore-bin-package=false --specials=bin,eslint --ignores bootstrap",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
     "build-azure": "babel-node ./node_modules/gulp/bin/gulp.js build-azure",
-    "test": "mocha --compilers js:babel/register --recursive ./test",
-    "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha -- --recursive ./test",
-    "test-coveralls": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha --report lcovonly -- --recursive ./test -R spec",
+    "test": "mocha --compilers js:babel/register --recursive ./test --timeout 5000",
+    "test-coverage": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha -- --recursive ./test --timeout 5000",
+    "test-coveralls": "babel-node ./node_modules/.bin/isparta cover node_modules/mocha/bin/_mocha --report lcovonly -- --recursive ./test -R spec --timeout 5000",
     "local": "babel-node ./src/index.js"
   },
   "dependencies": {
