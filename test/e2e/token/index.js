@@ -9,7 +9,10 @@ describe('/token/provider/user/repo', () =>
 
     stub({
       session: {
-        login: '/e2e/tester',
+        login: {
+          provider: 'e2e',
+          user: 'tester',
+        },
       },
       table: { insert },
     })

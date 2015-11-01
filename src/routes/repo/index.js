@@ -32,10 +32,10 @@ function filterInvalid(provider, user, repos) {
   }));
 }
 
-export function model({ url, session, params: { provider, user } }) {
+export function model({ session, params: { provider, user } }) {
   logger.debug(`[routes:repo] prepare repo list for provider [${provider}], user [${user}].`);
 
-  return loginModel.validate({ url, session })
+  return loginModel.validate({ provider, user, session })
   .then(() => repoModel.query({ provider, user }))
   .then(repos => ({
     provider,

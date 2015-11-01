@@ -26,7 +26,10 @@ describe('/provider/user', () =>
 
     stub({
       session: {
-        login: '/e2e/tester',
+        login: {
+          provider: 'e2e',
+          user: 'tester',
+        },
       },
       table: {
         query: tableQuery,
