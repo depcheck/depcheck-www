@@ -43,7 +43,6 @@ describe('view home', () => {
 
     const paragraph = query('body p');
     paragraph.text().should.containEql('Logged in')
-      .and.containEql('views/tester')
-      .and.containEql('repository list');
+      .and.containEql('views/tester');
   });
 });

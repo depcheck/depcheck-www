@@ -27,6 +27,5 @@ describe('/', () => {
     .get('/')
     .expect(200)
     .expect(/e2e\/tester/)
-    .expect(/repository list/)
     .end(done));
 });

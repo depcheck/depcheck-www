@@ -1,9 +1,6 @@
 import React from 'react';
 import Layout from './layout';
-
-const Badge = ({ badgeUrl }) => (
-  <span> <img src={badgeUrl} /></span>
-);
+import { BadgeImage } from './inline';
 
 const Dependencies = ({ caption, dependencies }) => (
   <div>
@@ -25,7 +22,7 @@ const Report = ({ caption, dependencies, devDependencies, badgeUrl }) => (
     <div className="panel panel-default">
       <div className="panel-heading">
         {caption}
-        <Badge badgeUrl={badgeUrl} />
+        <BadgeImage badgeUrl={badgeUrl} />
       </div>
       <div className="panel-body">
         {
