@@ -1,15 +1,12 @@
 import React from 'react';
 import Layout from './layout';
-
-const Badge = ({ badgeUrl }) => (
-  <span> <img src={badgeUrl} /></span>
-);
+import { BadgeImage } from './inline';
 
 const Repo = ({ name, description, enabled, repoUrl, badgeUrl }) => (
   <li>
     <h4>
       <a href={repoUrl}>{name}</a>
-      {enabled ? <Badge badgeUrl={badgeUrl} /> : null}
+      {enabled ? <BadgeImage badgeUrl={badgeUrl} /> : null}
     </h4>
     <p>{description}</p>
   </li>
