@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from './layout';
+import Navbar from './navbar';
 
 const Introduction = () => (
   <p>
@@ -38,6 +39,7 @@ export default React.createClass({
             <p className="text-center">
               {this.props.login ? <Welcome {...this.props} /> : <Login />}
             </p>
+            <Navbar />
           </div>
         </div>
         <Logo />

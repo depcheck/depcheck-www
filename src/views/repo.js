@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from './layout';
+import Navbar from './navbar';
 import { BadgeImage } from './inline';
 
 const Dependencies = ({ caption, dependencies }) => (
@@ -48,12 +49,12 @@ const Token = ({ repo, token, url }) =>
   ? (
     <div>
       <p><b>Repository token</b>: <code>{token}</code></p>
-      <p>Please keep the token security. Follow the <a>depcheck tutorial</a> to enjoy it.</p>
+      <p>Please keep the token security. Follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
     </div>
   )
   : (
     <form method="post" action={url}>
-      <p>Repository {repo} is not enabled for depcheck. Enable it with the below button, and follow the <a>depcheck tutorial</a> to enjoy it.</p>
+      <p>Repository {repo} is not enabled for depcheck. Enable it with the below button, and follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
       <input className="btn btn-success pull-right" type="submit" value="Enable Depcheck" />
     </form>
   );
@@ -68,6 +69,7 @@ export default React.createClass({
         <h5 className="text-center">
           from <mark>{this.props.provider}/{this.props.user}</mark>
         </h5>
+        <Navbar />
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
             <ul className="list-unstyled">

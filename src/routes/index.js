@@ -23,6 +23,7 @@ function createRouter() {
 
   const routes = [
     'home',
+    'home/tutorial',
     'login',
     'login/callback',
     'token',
