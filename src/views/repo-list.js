@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from './layout';
+import Navbar from './navbar';
 import { BadgeImage } from './inline';
 
 const Repo = ({ name, description, enabled, repoUrl, badgeUrl }) => (
@@ -28,6 +29,7 @@ export default React.createClass({
         <h5 className="text-center">
           from <mark>{this.props.provider}/{this.props.user}</mark>
         </h5>
+        <Navbar />
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
             <RepoList repos={this.props.enabled} />

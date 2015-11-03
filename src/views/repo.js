@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from './layout';
+import Navbar from './navbar';
 import { BadgeImage } from './inline';
 
 const Dependencies = ({ caption, dependencies }) => (
@@ -68,6 +69,7 @@ export default React.createClass({
         <h5 className="text-center">
           from <mark>{this.props.provider}/{this.props.user}</mark>
         </h5>
+        <Navbar />
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
             <ul className="list-unstyled">
