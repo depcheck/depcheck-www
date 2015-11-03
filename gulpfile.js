@@ -22,7 +22,7 @@ gulp.task('transform', ['clean'], () =>
     .pipe(babel())
     .pipe(gulp.dest('dist')));
 
-gulp.task('configuration', ['clean'], () =>
+gulp.task('services', ['clean'], () =>
   writeFile(
     path.resolve(__dirname, './dist/services/configuration.json'),
     '{}'));
@@ -35,6 +35,6 @@ gulp.task('routes', ['clean'], () =>
 gulp.task('build', [
   'lint',
   'routes',
+  'services',
   'transform',
-  'configuration',
 ]);
