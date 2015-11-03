@@ -49,12 +49,12 @@ const Token = ({ repo, token, url }) =>
   ? (
     <div>
       <p><b>Repository token</b>: <code>{token}</code></p>
-      <p>Please keep the token security. Follow the <a>depcheck tutorial</a> to enjoy it.</p>
+      <p>Please keep the token security. Follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
     </div>
   )
   : (
     <form method="post" action={url}>
-      <p>Repository {repo} is not enabled for depcheck. Enable it with the below button, and follow the <a>depcheck tutorial</a> to enjoy it.</p>
+      <p>Repository {repo} is not enabled for depcheck. Enable it with the below button, and follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
       <input className="btn btn-success pull-right" type="submit" value="Enable Depcheck" />
     </form>
   );
