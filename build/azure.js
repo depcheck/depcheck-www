@@ -12,7 +12,7 @@ gulp.task('azure:generate-server', ['azure:clean'], () => {
   return writeFile(serverPath, content);
 });
 
-gulp.task('azure:configuration', ['configuration'], () =>
+gulp.task('azure:services', ['services'], () =>
   writeFile(
     path.resolve(__dirname, '../dist/services/configuration.json'),
     JSON.stringify({ provider: 'azure' })));
@@ -20,5 +20,5 @@ gulp.task('azure:configuration', ['configuration'], () =>
 gulp.task('build-azure', [
   'build',
   'azure:generate-server',
-  'azure:configuration',
+  'azure:services',
 ]);
