@@ -1,4 +1,5 @@
 import express from 'express';
+import config from './routes';
 import generateRoutes from './generate';
 import { logger } from '../services';
 
@@ -21,7 +22,7 @@ function register(router, route, name, method) {
 
 function createRouter() {
   const router = new express.Router();
-  const routes = generateRoutes();
+  const routes = config.generate ? generateRoutes() : config.routes;
 
   routes.forEach(name => {
     const module = require(`./${name}`);

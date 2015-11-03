@@ -4,6 +4,7 @@ import gulp from 'gulp';
 import eslint from 'gulp-eslint';
 import babel from 'gulp-babel';
 import writeFile from './build/write-file';
+import generateRoutes from './src/routes/generate';
 
 import './build/azure';
 
@@ -26,4 +27,14 @@ gulp.task('configuration', ['clean'], () =>
     path.resolve(__dirname, './dist/services/configuration.json'),
     '{}'));
 
-gulp.task('build', ['lint', 'transform', 'configuration']);
+gulp.task('routes', ['clean'], () =>
+  writeFile(
+    path.resolve(__dirname, './dist/routes/routes.json'),
+    JSON.stringify({ routes: generateRoutes() })));
+
+gulp.task('build', [
+  'lint',
+  'routes',
+  'transform',
+  'configuration',
+]);
