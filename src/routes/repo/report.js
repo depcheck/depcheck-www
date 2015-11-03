@@ -47,6 +47,16 @@ export function model({
   }));
 }
 
+function endsWith(subject, search) {
+  const position = subject.length - search.length;
+  const lastIndex = subject.indexOf(search, position);
+  return lastIndex !== -1 && lastIndex === position;
+}
+
+model.middlewares = [
+  (req, res, next) => next(endsWith(req.url, '.svg') ? 'route' : undefined),
+];
+
 export function post({
     params: { provider, user, repo },
     body: { token, branch, report, result },
