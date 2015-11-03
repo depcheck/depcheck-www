@@ -27,7 +27,7 @@ function createRouter() {
     'login',
     'login/callback',
     'token',
-    'report/svg', // report/svg must place before repo/report.
+    'report/svg',
     'repo',
     'repo/report',
   ];
