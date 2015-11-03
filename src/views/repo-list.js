@@ -19,6 +19,19 @@ const RepoList = ({ repos }) => (
   </ul>
 );
 
+const InvalidRepoList = ({ repos, provider }) => repos.length
+  ? (
+    <div>
+      <hr />
+      <h3>Invalid Repositories</h3>
+      <p>The following repositories have been removed from {provider}, and become invalid.</p>
+      <RepoList repos={repos} />
+    </div>
+  )
+  : (
+    <div />
+  );
+
 export default React.createClass({
   render() {
     return (
@@ -35,10 +48,10 @@ export default React.createClass({
             <RepoList repos={this.props.enabled} />
             <hr />
             <RepoList repos={this.props.disabled} />
-            <hr />
-            <h3>Invalid Repositories</h3>
-            <p>The following repositories have been removed from {this.props.provider}, and become invalid.</p>
-            <RepoList repos={this.props.invalid} />
+            <InvalidRepoList
+              provider={this.props.provider}
+              repos={this.props.invalid}
+            />
           </div>
         </div>
       </Layout>
