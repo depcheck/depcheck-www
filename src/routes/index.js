@@ -23,9 +23,9 @@ function register(router, route, name, method) {
 function createRouter() {
   const router = new express.Router();
   const routes = config.generate ? generateRoutes() : config.routes;
+  const modules = routes.map(name => ({ name, module: require(`./${name}`) }));
 
-  routes.forEach(name => {
-    const module = require(`./${name}`);
+  modules.forEach(({ name, module }) => {
     const get = register(router, module.route, name, 'get');
     const post = register(router, module.route, name, 'post');
 
