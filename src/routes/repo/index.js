@@ -1,11 +1,8 @@
-import { compile } from 'path-to-regexp';
 import { logger } from '../../services';
 import * as repoModel from '../../models/repo';
 import * as loginModel from '../../models/login';
 
 export const route = '/:provider/:user';
-
-export const url = compile(route);
 
 export const view = 'repo-list';
 

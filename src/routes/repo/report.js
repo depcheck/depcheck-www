@@ -1,12 +1,9 @@
 import bodyParser from 'body-parser';
-import { compile } from 'path-to-regexp';
 import * as loginModel from '../../models/login';
 import * as tokenModel from '../../models/token';
 import * as reportModel from '../../models/report';
 
 export const route = '/:provider/:user/:repo';
-
-export const url = compile(route);
 
 export const view = 'repo';
 
