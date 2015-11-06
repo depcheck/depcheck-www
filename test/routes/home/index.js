@@ -1,6 +1,7 @@
 /* global describe, it */
 
 import 'should';
+import urls from '../../utils/urls';
 import route from '../../utils/route';
 
 describe('route home', () => {
@@ -13,7 +14,7 @@ describe('route home', () => {
       },
     });
 
-    return home.model({})
+    return home.model({ urls })
     .then(result => result.should.have.properties({
       login: null,
       repoListUrl: null,
@@ -34,7 +35,7 @@ describe('route home', () => {
       },
     });
 
-    return home.model({})
+    return home.model({ urls })
     .then(result => result.should.have.properties({
       login,
       repoListUrl: '/routes/tester',

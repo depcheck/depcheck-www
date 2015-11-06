@@ -1,6 +1,7 @@
 /* global describe, it */
 
 import 'should';
+import urls from '../../utils/urls';
 import route from '../../utils/route';
 import mockFunction from '../../utils/mock-function';
 
@@ -28,7 +29,7 @@ describe('route repo report', () => {
       },
     });
 
-    return repo.model({ params: info })
+    return repo.model({ urls, params: info })
     .then(model => model.should.have.properties(info)
       .and.have.properties({ token: 'project-token' })
       .and.have.property('reports').have.length(0))
@@ -61,7 +62,7 @@ describe('route repo report', () => {
       },
     });
 
-    return repo.model({ params: info })
+    return repo.model({ urls, params: info })
     .then(model => {
       model.reports.should.have.length(2);
 
@@ -98,7 +99,7 @@ describe('route repo report', () => {
       },
     });
 
-    return repo.model({ params: info })
+    return repo.model({ urls, params: info })
     .then(model => model.should.have.properties({
       token: undefined,
       tokenUrl: '/token/routes/tester/project',
