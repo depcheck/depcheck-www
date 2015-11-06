@@ -39,7 +39,7 @@ export default React.createClass({
             <p className="text-center">
               {this.props.login ? <Welcome {...this.props} /> : <Login />}
             </p>
-            <Navbar />
+            <Navbar {...this.props} />
           </div>
         </div>
         <Logo />

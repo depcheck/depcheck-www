@@ -8,7 +8,7 @@ export default React.createClass({
     return (
       <Layout>
         <h1 className="text-center">Tutorial</h1>
-        <Navbar />
+        <Navbar {...this.props} />
         <div className="row">
           <div
             className="col-md-8 col-md-offset-2"
