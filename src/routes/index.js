@@ -1,7 +1,7 @@
 import express from 'express';
 import config from './routes';
-import generateRoutes from './generate';
 import { logger } from '../services';
+import { generateRoutes, generateUrls } from './generate';
 
 function handleError(res) {
   return (error) => {
@@ -23,9 +23,10 @@ function register(router, route, name, method) {
 function createRouter() {
   const router = new express.Router();
   const routes = config.generate ? generateRoutes() : config.routes;
+  const modules = routes.map(name => ({ name, module: require(`./${name}`) }));
+  const urls = generateUrls(modules);
 
-  routes.forEach(name => {
-    const module = require(`./${name}`);
+  modules.forEach(({ name, module }) => {
     const get = register(router, module.route, name, 'get');
     const post = register(router, module.route, name, 'post');
 
@@ -33,7 +34,7 @@ function createRouter() {
 
     if (module.post) {
       post(module.post.middlewares, (req, res) =>
-        module.post(req).then(result =>
+        module.post({ ...req, urls }).then(result =>
           // TODO leverage `res.format` to better content-negotiation
           req.accepts('html') === 'html'
           ? res.redirect(req.get('Referer'))
@@ -42,10 +43,10 @@ function createRouter() {
 
     if (module.redirect) {
       get(module.redirect.middlewares, (req, res) =>
-        module.redirect(req).then(url => res.redirect(url)));
+        module.redirect({ ...req, urls }).then(url => res.redirect(url)));
     } else if (module.view && module.model) {
       get(module.model.middlewares, (req, res) =>
-        module.model(req).then(model =>
+        module.model({ ...req, urls }).then(model =>
           res.type(module.type || 'html').render(module.view, model)));
     }
   });

@@ -1,14 +1,13 @@
 import { logger } from '../../services';
 import { getProvider } from '../../providers';
-import { url as repoUrl } from '../repo';
 import * as loginModel from '../../models/login';
 
 export const route = '/login/:provider/callback';
 
-export function redirect({ params: { provider }, query: { code }, session }) {
+export function redirect({ params: { provider }, query: { code }, session, urls }) {
   logger.debug(`[routes:login:callback] prepare user redirect URL from provider [${provider}] with code [${code}].`);
   const getUser = getProvider(provider).getUser(code);
   const setLogin = getUser.then(user => loginModel.set({ session, provider, user }));
-  const getUserUrl = getUser.then(user => repoUrl({ provider, user }));
+  const getUserUrl = getUser.then(user => urls.repo.index({ provider, user }));
   return Promise.all([getUserUrl, setLogin]).then(([url]) => url);
 }

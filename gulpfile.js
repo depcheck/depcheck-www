@@ -4,7 +4,7 @@ import gulp from 'gulp';
 import eslint from 'gulp-eslint';
 import babel from 'gulp-babel';
 import writeFile from './build/write-file';
-import generateRoutes from './src/routes/generate';
+import { generateRoutes } from './src/routes/generate';
 
 import './build/azure';
 

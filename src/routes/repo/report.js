@@ -1,18 +1,14 @@
 import bodyParser from 'body-parser';
-import { compile } from 'path-to-regexp';
 import * as loginModel from '../../models/login';
 import * as tokenModel from '../../models/token';
 import * as reportModel from '../../models/report';
-import { url as badgeUrl } from '../report/svg';
-import { url as tokenUrl } from '../token';
 
 export const route = '/:provider/:user/:repo';
-
-export const url = compile(route);
 
 export const view = 'repo';
 
 export function model({
+    urls,
     session,
     params: { provider, user, repo },
   }) {
@@ -26,7 +22,7 @@ export function model({
     user,
     repo,
     token,
-    tokenUrl: tokenUrl({
+    tokenUrl: urls.token.index({
       provider,
       user,
       repo,
@@ -36,12 +32,12 @@ export function model({
       caption: report.report
         ? `${report.branch}/${report.report}`
         : report.branch,
-      badgeUrl: badgeUrl({
+      badgeUrl: urls.report.svg({
         provider,
         user,
         repo,
         branch: report.branch,
-        report: report.report,
+        report: report.report || undefined,
       }),
     })),
   }));

@@ -1,27 +1,22 @@
-import { compile } from 'path-to-regexp';
 import { logger } from '../../services';
-import { url as reportUrl } from './report';
-import { url as badgeUrl } from '../report/svg';
 import * as repoModel from '../../models/repo';
 import * as loginModel from '../../models/login';
 
 export const route = '/:provider/:user';
 
-export const url = compile(route);
-
 export const view = 'repo-list';
 
-function filterEnabled(provider, user, repos) {
+function filterEnabled(provider, user, repos, urls) {
   return repos.filter(repo => repo.token && !repo.invalid).map(repo => ({
     ...repo,
     token: undefined, // hide token from this view model
     enabled: true,
-    repoUrl: reportUrl({
+    repoUrl: urls.repo.report({
       provider,
       user,
       repo: repo.name,
     }),
-    badgeUrl: badgeUrl({
+    badgeUrl: urls.report.svg({
       provider,
       user,
       repo: repo.name,
@@ -30,10 +25,10 @@ function filterEnabled(provider, user, repos) {
   }));
 }
 
-function filterDisabled(provider, user, repos) {
+function filterDisabled(provider, user, repos, urls) {
   return repos.filter(repo => !repo.token && !repo.invalid).map(repo => ({
     ...repo,
-    repoUrl: reportUrl({
+    repoUrl: urls.repo.report({
       provider,
       user,
       repo: repo.name,
@@ -41,10 +36,10 @@ function filterDisabled(provider, user, repos) {
   }));
 }
 
-function filterInvalid(provider, user, repos) {
+function filterInvalid(provider, user, repos, urls) {
   return repos.filter(repo => repo.invalid).map(repo => ({
     ...repo,
-    repoUrl: reportUrl({
+    repoUrl: urls.repo.report({
       provider,
       user,
       repo: repo.name,
@@ -52,7 +47,7 @@ function filterInvalid(provider, user, repos) {
   }));
 }
 
-export function model({ session, params: { provider, user } }) {
+export function model({ urls, session, params: { provider, user } }) {
   logger.debug(`[routes:repo] prepare repo list for provider [${provider}], user [${user}].`);
 
   return loginModel.validate({ provider, user, session })
@@ -60,8 +55,8 @@ export function model({ session, params: { provider, user } }) {
   .then(repos => ({
     provider,
     user,
-    enabled: filterEnabled(provider, user, repos),
-    disabled: filterDisabled(provider, user, repos),
-    invalid: filterInvalid(provider, user, repos),
+    enabled: filterEnabled(provider, user, repos, urls),
+    disabled: filterDisabled(provider, user, repos, urls),
+    invalid: filterInvalid(provider, user, repos, urls),
   }));
 }
