@@ -1,4 +1,4 @@
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 import response from './response';
 import { logger, table } from '../services';
 

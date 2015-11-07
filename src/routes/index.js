@@ -1,4 +1,4 @@
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 import express from 'express';
 import config from './routes';
 import layout from './layout';
