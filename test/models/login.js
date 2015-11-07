@@ -25,7 +25,10 @@ describe('model login', () => {
       user: 'hacker',
       session,
     })
-    .catch(error => error.should.have.properties(['code', 'message'])));
+    .catch(error => error.should.have.properties({
+      statusCode: 401,
+      message: 'Unanthorized, please login in.',
+    })));
 
   it('should return true when logged user is the owner of repo', () =>
     model('login').isLoggedIn({
