@@ -1,3 +1,4 @@
+import response from './response';
 import { logger } from '../services';
 
 export function set({ session, provider, user }) {
@@ -19,10 +20,7 @@ export function validate({ provider, user, session: { login = {} } }) {
       resolve();
     } else {
       logger.info(`[model:login] validate [${provider}/${user}] request fail.`);
-      reject({
-        code: 401,
-        message: 'Unanthorized, please login in.',
-      });
+      reject(response(401, 'Unanthorized, please login in.'));
     }
   });
 }
