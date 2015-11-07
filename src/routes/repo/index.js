@@ -1,6 +1,5 @@
 import { logger } from '../../services';
 import * as repoModel from '../../models/repo';
-import * as loginModel from '../../models/login';
 
 export const route = '/:provider/:user';
 
@@ -47,11 +46,10 @@ function filterInvalid(provider, user, repos, urls) {
   }));
 }
 
-export function model({ urls, session, params: { provider, user } }) {
+export function model({ urls, params: { provider, user } }) {
   logger.debug(`[routes:repo] prepare repo list for provider [${provider}], user [${user}].`);
 
-  return loginModel.validate({ provider, user, session })
-  .then(() => repoModel.query({ provider, user }))
+  return repoModel.query({ provider, user })
   .then(repos => ({
     provider,
     user,
