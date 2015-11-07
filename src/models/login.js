@@ -26,3 +26,7 @@ export function validate({ provider, user, session: { login = {} } }) {
     }
   });
 }
+
+export function isLoggedIn({ provider, user, session }) {
+  return validate({ provider, user, session }).then(() => true, () => false);
+}
