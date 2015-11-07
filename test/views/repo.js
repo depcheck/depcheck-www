@@ -3,27 +3,46 @@
 import 'should';
 import view from '../utils/view';
 
+const info = {
+  provider: 'views',
+  user: 'tester',
+  repo: 'project',
+  isOwner: true,
+  token: 'project-token',
+  reports: [],
+};
+
 describe('view repo', () => {
   it('should render repo info', () => {
-    const query = view('repo', {
-      provider: 'views',
-      user: 'tester',
-      repo: 'project',
-      token: 'project-token',
-      reports: [],
-    });
+    const query = view('repo', info);
 
     query('h1').text().should.equal('project');
     query('h5').text().should.equal('from views/tester');
+  });
+
+  it('should render token if user is the owner', () => {
+    const query = view('repo', {
+      ...info,
+      isOwner: true,
+      token: 'project-token',
+    });
+
     query('code').text().should.equal('project-token');
+  });
+
+  it('should not render token if user is not the owner', () => {
+    const query = view('repo', {
+      ...info,
+      isOwner: false,
+      token: null,
+    });
+
+    query('code').should.have.length(0);
   });
 
   it('should render repo report page with report details', () => {
     const query = view('repo', {
-      provider: 'views',
-      user: 'tester',
-      repo: 'project',
-      token: 'project-token',
+      ...info,
       reports: [
         {
           caption: 'master',
@@ -63,12 +82,10 @@ describe('view repo', () => {
 
   it('should render request token button if not enabled', () => {
     const query = view('repo', {
-      provider: 'views',
-      user: 'tester',
-      repo: 'project',
+      ...info,
+      isOwner: true,
       token: undefined,
       tokenUrl: '/request/project/token',
-      reports: [],
     });
 
     query('code').should.have.length(0);

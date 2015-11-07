@@ -12,21 +12,22 @@ export function model({
     session,
     params: { provider, user, repo },
   }) {
-  return loginModel.validate({ provider, user, session })
-  .then(() => Promise.all([
+  return Promise.all([
+    loginModel.isLoggedIn({ provider, user, session }),
     reportModel.query({ provider, user, repo }),
     tokenModel.get({ provider, user, repo }).catch(() => undefined),
-  ]))
-  .then(([reports, token]) => ({
+  ])
+  .then(([isOwner, reports, token]) => ({
     provider,
     user,
     repo,
-    token,
-    tokenUrl: urls.token.index({
+    isOwner,
+    token: isOwner ? token : null,
+    tokenUrl: isOwner && !token ? urls.token.index({
       provider,
       user,
       repo,
-    }),
+    }) : null,
     reports: reports.map(report => ({
       ...report,
       caption: report.report

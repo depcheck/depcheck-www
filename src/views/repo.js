@@ -44,8 +44,12 @@ const Report = ({ caption, dependencies, devDependencies, badgeUrl }) => (
   </li>
 );
 
-const Token = ({ repo, token, url }) =>
-  token
+const Token = ({ repo, isOwner, token, url }) => {
+  if (!isOwner) {
+    return <div />;
+  }
+
+  return token
   ? (
     <div>
       <p><b>Repository token</b>: <code>{token}</code></p>
@@ -58,6 +62,7 @@ const Token = ({ repo, token, url }) =>
       <input className="btn btn-success pull-right" type="submit" value="Enable Depcheck" />
     </form>
   );
+};
 
 export default React.createClass({
   render() {
@@ -80,6 +85,7 @@ export default React.createClass({
             </ul>
             <Token
               repo={this.props.repo}
+              isOwner={this.props.isOwner}
               token={this.props.token}
               url={this.props.tokenUrl}
             />
