@@ -1,12 +1,13 @@
 import express from 'express';
 import config from './routes';
+import layout from './layout';
 import { logger } from '../services';
 import { generateRoutes, generateUrls } from './generate';
 
 function handleError(res) {
   return (error) => {
     // TODO implement more safe error handling
-    logger.warn(error);
+    logger.warn(error.toString());
     res.status(error.code).send(error.message);
   };
 }
@@ -45,9 +46,11 @@ function createRouter() {
       get(module.redirect.middlewares, (req, res) =>
         module.redirect({ ...req, urls }).then(url => res.redirect(url)));
     } else if (module.view && module.model) {
+      const type = module.type || 'html';
       get(module.model.middlewares, (req, res) =>
-        module.model({ ...req, urls }).then(model =>
-          res.type(module.type || 'html').render(module.view, model)));
+        module.model({ ...req, urls })
+        .then(model => ({ ...layout({ ...req, urls }), ...model }))
+        .then(model => res.type(type).render(module.view, model)));
     }
   });
 

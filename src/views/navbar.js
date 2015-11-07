@@ -9,9 +9,11 @@ export default React.createClass({
     return (
       <p className="text-center">
         <small>
-          <a href="/">Home</a>
+          <a href={this.props.homeUrl}>Home</a>
           <Dash />
-          <a href="/tutorial">Tutorial</a>
+          {this.props.repoUrl ? <a href={this.props.repoUrl}>Repository</a> : null}
+          {this.props.repoUrl ? <Dash /> : null}
+          <a href={this.props.tutorialUrl}>Tutorial</a>
           <Dash />
           <a href="https://github.com/lijunle/depcheck-web">GitHub</a>
         </small>
