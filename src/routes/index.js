@@ -7,7 +7,7 @@ import { generateRoutes, generateUrls } from './generate';
 function handleError(res) {
   return (error) => {
     // TODO implement more safe error handling
-    logger.warn(error);
+    logger.warn(error.toString());
     res.status(error.code).send(error.message);
   };
 }
