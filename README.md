@@ -10,6 +10,9 @@ Integrate with [depcheck](https://github.com/lijunle/depcheck-es6) to show the r
 [![codecov.io](https://codecov.io/github/lijunle/depcheck-web/coverage.svg?branch=master)](https://codecov.io/github/lijunle/depcheck-web?branch=master)
 [![Depcheck](https://depcheck.tk/github/lijunle/depcheck-web/master.svg)](https://github.com/lijunle/depcheck-web)
 
+[![Dependency Status](https://david-dm.org/lijunle/depcheck-web.svg)](https://david-dm.org/lijunle/depcheck-web)
+[![devDependency Status](https://david-dm.org/lijunle/depcheck-web/dev-status.svg)](https://david-dm.org/lijunle/depcheck-web#info=devDependencies)
+
 ## Usage
 
 Currently, this service only support Travis CI with GitHub.
