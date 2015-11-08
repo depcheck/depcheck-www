@@ -50,10 +50,10 @@ function createRouter() {
     if (module.post) {
       post(module.post.middlewares, (req, res) =>
         module.post({ ...req, urls }).then(result =>
-          // TODO leverage `res.format` to better content-negotiation
-          req.accepts('html') === 'html'
-          ? res.redirect(req.get('Referer'))
-          : res.send(result)));
+          res.format({
+            json: () => res.send(result),
+            html: () => res.redirect(req.get('Referer')),
+          })));
     }
 
     if (module.redirect) {
