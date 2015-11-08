@@ -1,4 +1,5 @@
-import uuid from 'node-uuid';
+import uuid from 'uuid';
+import response from './response';
 import { logger, table } from '../services';
 
 function getId(provider, user, repo) {
@@ -31,7 +32,7 @@ export function get({ provider, user, repo }) {
     if (!record) {
       const name = `${provider}/${user}/${repo}`;
       logger.info(`[model:token] the repository [${name}] is not enabled.`);
-      throw new Error(`Depcheck for repository [${name}] is not enabled.`);
+      throw response(400, `Depcheck for repository [${name}] is not enabled.`);
     }
 
     return record.token;
@@ -44,7 +45,7 @@ export function validate({ provider, user, repo, token }) {
   .then(expected => {
     if (expected !== token) {
       logger.info(`[model:token] unauthorized, expected token [${expected}], actual token [${token}].`);
-      throw new Error('Unauthorized to update the depcheck status.');
+      throw response(401, `Token ${token} not matches the repo ${repo} of ${provider}/${user}.`);
     }
   });
 }

@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import express from 'express';
 import config from './routes';
 import layout from './layout';
@@ -6,9 +7,22 @@ import { generateRoutes, generateUrls } from './generate';
 
 function handleError(res) {
   return (error) => {
-    // TODO implement more safe error handling
-    logger.warn(error.toString());
-    res.status(error.code).send(error.message);
+    const id = uuid.v1();
+    if (error.isResponse) {
+      // throw explicitly, message is safe to expose
+      logger.warn(`Handle response error with log id [${id}]. ${JSON.stringify(error)}`);
+      res.status(error.statusCode).send({
+        id,
+        message: error.message,
+      });
+    } else {
+      // throw unexplicitly, log as error and not disclose error message
+      logger.error(`Handle unexpected error with log id [${id}]. Message: [${error.message}]. Call stack: [${error.stack}]`);
+      res.status(500).send({
+        id,
+        message: 'Unexpected error happens.',
+      });
+    }
   };
 }
 
