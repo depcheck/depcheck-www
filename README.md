@@ -15,11 +15,7 @@ Integrate with [depcheck](https://github.com/lijunle/depcheck-es6) to show the r
 
 ## Usage
 
-Currently, this service only support Travis CI with GitHub.
-
-1. Add `--web-report` to your `depcheck` command in the `.travis.yml` file.
-2. Commit the changes and push to GitHub. A Travis build will be trigger to run `depcheck` command.
-3. After finish, view your depcheck report on http://depcheck.tk/github/user-name/repo-name.
+Read the [tutorial](https://github.com/lijunle/depcheck-web/blob/master/doc/tutorial.md).
 
 ## License
 
