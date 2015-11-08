@@ -1,0 +1,4 @@
+instrumentation:
+  excludes:
+    - src/providers/index.js
+    - src/services/local/table.js

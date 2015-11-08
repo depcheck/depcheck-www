@@ -8,32 +8,51 @@ export const route = '/:provider/:user/:repo';
 export const view = 'repo';
 
 export function model({
-    url,
+    urls,
     session,
     params: { provider, user, repo },
   }) {
-  return loginModel.validate({ url, session })
-  .then(() => Promise.all([
+  return Promise.all([
+    loginModel.isLoggedIn({ provider, user, session }),
     reportModel.query({ provider, user, repo }),
     tokenModel.get({ provider, user, repo }).catch(() => undefined),
-  ]))
-  .then(([reports, token]) => ({
+  ])
+  .then(([isOwner, reports, token]) => ({
     provider,
     user,
     repo,
-    token,
-    tokenUrl: `/token/${provider}/${user}/${repo}`,
+    isOwner,
+    token: isOwner ? token : null,
+    tokenUrl: isOwner && !token ? urls.token.index({
+      provider,
+      user,
+      repo,
+    }) : null,
     reports: reports.map(report => ({
       ...report,
       caption: report.report
         ? `${report.branch}/${report.report}`
         : report.branch,
-      badgeUrl: report.report
-        ? `/${provider}/${user}/${repo}/${report.branch}/${report.report}.svg`
-        : `/${provider}/${user}/${repo}/${report.branch}.svg`,
+      badgeUrl: urls.report.svg({
+        provider,
+        user,
+        repo,
+        branch: report.branch,
+        report: report.report || undefined,
+      }),
     })),
   }));
 }
+
+function endsWith(subject, search) {
+  const position = subject.length - search.length;
+  const lastIndex = subject.indexOf(search, position);
+  return lastIndex !== -1 && lastIndex === position;
+}
+
+model.middlewares = [
+  (req, res, next) => next(endsWith(req.url, '.svg') ? 'route' : undefined),
+];
 
 export function post({
     params: { provider, user, repo },

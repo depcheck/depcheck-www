@@ -9,11 +9,15 @@ describe('/token/provider/user/repo', () =>
 
     stub({
       session: {
-        login: '/e2e/tester',
+        login: {
+          provider: 'e2e',
+          user: 'tester',
+        },
       },
       table: { insert },
     })
     .post('/token/e2e/tester/project')
+    .set('Accept', 'text/html')
     .set('Referer', '/e2e/tester')
     .expect(302)
     .expect('Location', '/e2e/tester')

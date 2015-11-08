@@ -76,4 +76,10 @@ describe('view repo list', () => {
     repoItem.find('h4 > a').attr('href').should.equal('/project/3');
     repoItem.find('p').text().should.equal('');
   });
+
+  it('should not render invalid repository section if no invalid', () => {
+    const query = view('repo-list', { ...data, invalid: [] });
+
+    query('h3').should.have.length(0);
+  });
 });

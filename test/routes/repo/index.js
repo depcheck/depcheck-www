@@ -1,6 +1,7 @@
 /* global describe, it */
 
 import 'should';
+import urls from '../../utils/urls';
 import route from '../../utils/route';
 import mockFunction from '../../utils/mock-function';
 
@@ -45,7 +46,7 @@ describe('route repo index', () => {
       },
     });
 
-    return repo.model({ params: info })
+    return repo.model({ urls, params: info })
     .then(model => {
       model.should.have.properties(info);
       model.should.have.property('enabled').have.length(3);

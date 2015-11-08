@@ -33,19 +33,16 @@ describe('view home', () => {
         provider: 'views',
         user: 'tester',
       },
-      url: {
-        repoList: '/repo/list',
-      },
+      repoListUrl: '/repo/list',
     };
 
     const query = view('home', properties);
 
     const anchor = query('body a');
-    anchor.attr('href').should.equal(properties.url.repoList);
+    anchor.attr('href').should.equal(properties.repoListUrl);
 
     const paragraph = query('body p');
     paragraph.text().should.containEql('Logged in')
-      .and.containEql('views/tester')
-      .and.containEql('repository list');
+      .and.containEql('views/tester');
   });
 });

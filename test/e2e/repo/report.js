@@ -18,7 +18,10 @@ describe('/provider/user/repo', () => {
 
     stub({
       session: {
-        login: '/e2e/tester',
+        login: {
+          provider: 'e2e',
+          user: 'tester',
+        },
       },
       table: {
         query,
@@ -51,7 +54,10 @@ describe('/provider/user/repo', () => {
 
     stub({
       session: {
-        login: '/e2e/tester',
+        login: {
+          provider: 'e2e',
+          user: 'tester',
+        },
       },
       table: {
         query,
@@ -120,4 +126,59 @@ describe('/provider/user/repo', () => {
     })
     .end(done);
   });
+
+  it('should reject new report when token is invalid', done =>
+    stub({
+      table: {
+        query: mockFunction([{
+          provider: 'e2e',
+          user: 'tester',
+          repo: 'project',
+          token: 'security-token',
+        }]),
+      },
+    })
+    .post('/e2e/tester/project')
+    .set('Accept', 'application/json')
+    .send({
+      token: 'hack-token',
+      branch: 'test',
+      report: 'new',
+      result: {
+        dependencies: [],
+        devDependencies: [],
+      },
+    })
+    .expect(401)
+    .expect(res => {
+      res.body.should.have.properties(['id', 'message']);
+      res.body.id.should.not.be.empty();
+      res.body.message.should.not.be.empty();
+    })
+    .end(done));
+
+  it('should reject report and handle unexpected error when happens', done =>
+    stub({
+      table: {
+        query: mockFunction(() => Promise.reject(new Error('unexpected'))),
+      },
+    })
+    .post('/e2e/tester/project')
+    .set('Accept', 'application/json')
+    .send({
+      token: 'hack-token',
+      branch: 'test',
+      report: 'new',
+      result: {
+        dependencies: [],
+        devDependencies: [],
+      },
+    })
+    .expect(500)
+    .expect(res => {
+      res.body.should.have.properties(['id', 'message']);
+      res.body.id.should.not.be.empty();
+      res.body.message.should.equal('Unexpected error happens.');
+    })
+    .end(done));
 });

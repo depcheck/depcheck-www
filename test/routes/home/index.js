@@ -1,6 +1,7 @@
 /* global describe, it */
 
 import 'should';
+import urls from '../../utils/urls';
 import route from '../../utils/route';
 
 describe('route home', () => {
@@ -13,7 +14,11 @@ describe('route home', () => {
       },
     });
 
-    return home.model({}).then(result => result.should.eql({}));
+    return home.model({ urls })
+    .then(result => result.should.have.properties({
+      login: null,
+      repoListUrl: null,
+    }));
   });
 
   it('should return login information if login', () => {
@@ -30,9 +35,10 @@ describe('route home', () => {
       },
     });
 
-    return home.model({}).then(result => {
-      result.login.should.eql(login);
-      result.url.repoList.should.not.be.empty();
-    });
+    return home.model({ urls })
+    .then(result => result.should.have.properties({
+      login,
+      repoListUrl: '/routes/tester',
+    }));
   });
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from './layout';
+import Navbar from './navbar';
 
 const Introduction = () => (
   <p>
@@ -16,17 +17,15 @@ const Logo = () => (
 );
 
 const Login = () => (
-  <p className="text-center">
-    <a className="btn btn-default" href="/login/github">
-      Login with GitHub Account
-    </a>
-  </p>
+  <a className="btn btn-default" href="/login/github">
+    Login with GitHub Account
+  </a>
 );
 
-const Welcome = ({ login, url }) => (
-  <p>
-    Logged in as <mark>{login.provider}/{login.user}</mark>. Go to <a href={url.repoList}>repository list</a>.
-  </p>
+const Welcome = ({ login, repoListUrl }) => (
+  <a className="btn btn-default" href={repoListUrl}>
+    Logged in as <mark>{login.provider}/{login.user}</mark>
+  </a>
 );
 
 export default React.createClass({
@@ -37,7 +36,10 @@ export default React.createClass({
         <div className="row">
           <div className="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
             <Introduction />
-            {this.props.login ? <Welcome {...this.props} /> : <Login />}
+            <p className="text-center">
+              {this.props.login ? <Welcome {...this.props} /> : <Login />}
+            </p>
+            <Navbar {...this.props} />
           </div>
         </div>
         <Logo />
