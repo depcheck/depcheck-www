@@ -33,7 +33,7 @@ function requestApi(url, options) {
     }));
 }
 
-export function getUser(code) {
+export function getAccessToken(code) {
   return requestApi('https://github.com/login/oauth/access_token', {
     method: 'POST',
     qs: {
@@ -42,9 +42,14 @@ export function getUser(code) {
       client_secret: clientSecret,
     },
   })
-  .then(({ access_token }) => requestApi('https://api.github.com/user', {
+  .then(({ access_token: accessToken }) => accessToken);
+}
+
+export function getUser(code) {
+  return getAccessToken(code)
+  .then(accessToken => requestApi('https://api.github.com/user', {
     qs: {
-      access_token,
+      access_token: accessToken,
     },
   }))
   .then(({ login }) => login);
