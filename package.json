@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "babel-node ./node_modules/gulp/bin/gulp.js lint",
-    "depcheck": "depcheck --ignore-bin-package=false --specials=bin,eslint --ignores bootstrap",
+    "depcheck": "depcheck --ignore-bin-package=false --specials=bin,eslint --ignores bootstrap,patch-version",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
     "build-azure": "babel-node ./node_modules/gulp/bin/gulp.js build-azure",
     "test": "mocha --compilers js:babel/register --recursive ./test --timeout 5000",
@@ -43,7 +43,7 @@
     "cheerio": "^0.19.0",
     "codecov.io": "^0.1.6",
     "del": "^2.0.2",
-    "depcheck-es6": "^0.5.8",
+    "depcheck": "=0.5.9",
     "eslint": "^1.6.0",
     "eslint-config-airbnb": "^0.1.0",
     "eslint-plugin-react": "^3.6.3",
