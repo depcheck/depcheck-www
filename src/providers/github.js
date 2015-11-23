@@ -45,13 +45,12 @@ export function getAccessToken(code) {
   .then(({ access_token: accessToken }) => accessToken);
 }
 
-export function getUser(code) {
-  return getAccessToken(code)
-  .then(accessToken => requestApi('https://api.github.com/user', {
+export function getUser(accessToken) {
+  return requestApi('https://api.github.com/user', {
     qs: {
       access_token: accessToken,
     },
-  }))
+  })
   .then(({ login }) => login);
 }
 
