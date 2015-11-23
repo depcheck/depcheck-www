@@ -2,8 +2,10 @@
 
 import 'should';
 import model from '../utils/model';
+import mockFunction from '../utils/mock-function';
 
 const session = {
+  accessToken: 'project-token',
   login: {
     provider: 'models',
     user: 'tester',
@@ -30,19 +32,43 @@ describe('model login', () => {
       message: 'Unanthorized, please login in.',
     })));
 
-  it('should return true when logged user is the owner of repo', () =>
-    model('login').isLoggedIn({
-      provider: 'models',
-      user: 'tester',
-      session,
-    })
-    .then(result => result.should.equal(true)));
+  describe('hasAccess', () => {
+    it('should return true when provider repos contains target repo', () => {
+      const getRepos = mockFunction(['tester/project']);
 
-  it('should return false when logged user is not the owner of repo', () =>
-    model('login').isLoggedIn({
-      provider: 'models',
-      user: 'hacker',
-      session,
-    })
-    .catch(result => result.should.equal(false)));
+      const loginModel = model('login', {
+        '../providers': {
+          getProvider: () => ({ getRepos }),
+        },
+      });
+
+      loginModel.hasAccess({
+        session,
+        provider: 'models',
+        user: 'tester',
+        repo: 'project',
+      })
+      .then(result => result.should.equal(true))
+      .then(() => getRepos.calls[0][0].should.equal('project-token'));
+    });
+
+    it('should return false when provider repos not contains target repo', () => {
+      const getRepos = mockFunction([]);
+
+      const loginModel = model('login', {
+        '../providers': {
+          getProvider: () => ({ getRepos }),
+        },
+      });
+
+      loginModel.hasAccess({
+        session,
+        provider: 'models',
+        user: 'tester',
+        repo: 'project',
+      })
+      .then(result => result.should.equal(false))
+      .then(() => getRepos.calls[0][0].should.equal('project-token'));
+    });
+  });
 });
