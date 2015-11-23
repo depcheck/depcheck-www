@@ -112,13 +112,13 @@ describe('route repo report', () => {
 
     return repo.model({ urls, params: info })
     .then(model => model.should.have.properties({
-      isOwner: true,
+      hasAccess: true,
       token: undefined,
       tokenUrl: '/token/routes/tester/project',
     }));
   });
 
-  it('should set isOwner and token properly when user not has access', () => {
+  it('should set hasAccess and token properly when user not has access', () => {
     const repo = route('repo/report', {
       '../../models/login': {
         hasAccess: mockFunction(false),
@@ -133,7 +133,7 @@ describe('route repo report', () => {
 
     return repo.model({ urls, params: info })
     .then(model => model.should.have.properties({
-      isOwner: false,
+      hasAccess: false,
       token: null,
       tokenUrl: null,
     }));

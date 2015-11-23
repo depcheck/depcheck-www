@@ -21,7 +21,7 @@ export function model({
     provider,
     user,
     repo,
-    isOwner: hasAccess, // TODO rename isOwner to hasAccess
+    hasAccess,
     token: hasAccess ? token : null,
     tokenUrl: hasAccess && !token ? urls.token.index({
       provider,

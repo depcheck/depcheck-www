@@ -44,17 +44,17 @@ const Report = ({ caption, dependencies, devDependencies, badgeUrl }) => (
   </li>
 );
 
-const Token = ({ repo, isOwner, token, url }) => {
-  if (token && isOwner) {
+const Token = ({ repo, hasAccess, token, url }) => {
+  if (token && hasAccess) {
     return (
       <div>
         <p><b>Repository token</b>: <code>{token}</code></p>
         <p>Please keep the token security. Follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
       </div>
     );
-  } else if (token && !isOwner) {
+  } else if (token && !hasAccess) {
     return <div />;
-  } else if (!token && isOwner) {
+  } else if (!token && hasAccess) {
     return (
       <form method="post" action={url}>
         <p>Repository {repo} is not enabled for depcheck. Enable it with the below button, and follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
@@ -87,7 +87,7 @@ export default React.createClass({
             </ul>
             <Token
               repo={this.props.repo}
-              isOwner={this.props.isOwner}
+              hasAccess={this.props.hasAccess}
               token={this.props.token}
               url={this.props.tokenUrl}
             />
