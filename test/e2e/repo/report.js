@@ -6,6 +6,7 @@ import mockFunction from '../../utils/mock-function';
 
 describe('/provider/user/repo', () => {
   it('should render the repo page', done => {
+    const getRepos = mockFunction('tester/project');
     const query = mockFunction(tableName =>
       tableName === 'report'
       ? [{
@@ -18,10 +19,14 @@ describe('/provider/user/repo', () => {
 
     stub({
       session: {
+        accessToken: 'tester-access-token',
         login: {
           provider: 'e2e',
           user: 'tester',
         },
+      },
+      providers: {
+        getRepos,
       },
       table: {
         query,
@@ -35,6 +40,7 @@ describe('/provider/user/repo', () => {
     .expect(/passing/)
     .expect(/unused-dep/)
     .expect(/unused-devDep/)
+    .expect(() => getRepos.calls[0][0].should.have.equal('tester-access-token'))
     .expect(() => {
       query.calls[0][0].should.equal('report');
       query.calls[0][1].filter.should.have.properties({
@@ -50,14 +56,19 @@ describe('/provider/user/repo', () => {
   });
 
   it('should render repo page to request token', done => {
+    const getRepos = mockFunction('tester/project');
     const query = mockFunction([]);
 
     stub({
       session: {
+        accessToken: 'tester-access-token',
         login: {
           provider: 'e2e',
           user: 'tester',
         },
+      },
+      providers: {
+        getRepos,
       },
       table: {
         query,
@@ -71,6 +82,7 @@ describe('/provider/user/repo', () => {
   });
 
   it('should not render request token when not has access', done => {
+    const getRepos = mockFunction('hacker/project');
     const query = mockFunction([]);
 
     stub({
@@ -80,6 +92,9 @@ describe('/provider/user/repo', () => {
           provider: 'e2e',
           user: 'hacker',
         },
+      },
+      providers: {
+        getRepos,
       },
       table: {
         query,

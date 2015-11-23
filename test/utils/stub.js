@@ -24,6 +24,7 @@ function stubProviders(stubs) {
     getProvider: () => ({
       getAccessToken: (...args) => stubs.providers.getAccessToken(...args),
       getLoginUrl: (...args) => stubs.providers.getLoginUrl(...args),
+      getRepos: (...args) => stubs.providers.getRepos(...args),
       getUser: (...args) => stubs.providers.getUser(...args),
       query: (...args) => stubs.providers.query(...args),
     }),

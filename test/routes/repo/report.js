@@ -16,7 +16,7 @@ describe('route repo report', () => {
     const query = mockFunction([]);
     const repo = route('repo/report', {
       '../../models/login': {
-        isLoggedIn: mockFunction(true),
+        hasAccess: mockFunction(true),
       },
       '../../models/report': {
         query,
@@ -36,7 +36,7 @@ describe('route repo report', () => {
   it('should return the reports', () => {
     const repo = route('repo/report', {
       '../../models/login': {
-        isLoggedIn: mockFunction(true),
+        hasAccess: mockFunction(true),
       },
       '../../models/report': {
         query: mockFunction([
@@ -75,10 +75,10 @@ describe('route repo report', () => {
     });
   });
 
-  it('should return the reports even if user not logged in', () => {
+  it('should return the reports even if user not has access', () => {
     const repo = route('repo/report', {
       '../../models/login': {
-        isLoggedIn: mockFunction(false),
+        hasAccess: mockFunction(false),
       },
       '../../models/report': {
         query: mockFunction([
@@ -100,7 +100,7 @@ describe('route repo report', () => {
   it('should set token properly when repo not enabled', () => {
     const repo = route('repo/report', {
       '../../models/login': {
-        isLoggedIn: mockFunction(true),
+        hasAccess: mockFunction(true),
       },
       '../../models/report': {
         query: mockFunction([]),
@@ -118,10 +118,10 @@ describe('route repo report', () => {
     }));
   });
 
-  it('should set isOwner and token properly when user not logged in', () => {
+  it('should set isOwner and token properly when user not has access', () => {
     const repo = route('repo/report', {
       '../../models/login': {
-        isLoggedIn: mockFunction(false),
+        hasAccess: mockFunction(false),
       },
       '../../models/report': {
         query: mockFunction([]),

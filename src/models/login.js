@@ -32,6 +32,19 @@ export function validate({ provider, user, session: { login = {} } }) {
   });
 }
 
+// TODO deprecated function
 export function isLoggedIn({ provider, user, session }) {
   return validate({ provider, user, session }).then(() => true, () => false);
+}
+
+export function hasAccess({ session, provider, user, repo }) {
+  logger.debug(`[model:login] check if user [${provider}/${user}] has access to [${user}/${repo}].`);
+  const targetProvider = getProvider(provider);
+
+  // TODO cache repos
+  return targetProvider.getRepos(session.accessToken)
+    .then(repos => {
+      const targetRepo = `${user}/${repo}`;
+      return repos.indexOf(targetRepo) !== -1;
+    });
 }
