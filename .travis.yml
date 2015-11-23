@@ -1,7 +1,8 @@
 language: node_js
 
 node_js:
-  - 'node'
+  - 4
+  - 5
 
 script:
   - npm run depcheck -- --web-report
@@ -9,7 +10,11 @@ script:
   - npm run test-coverage
   - cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js
 
+before_deploy:
+  - git checkout -b master
+
 deploy:
   provider: azure_web_apps
   on:
-    branch: deployment
+    tags: true
+    node: 4
