@@ -70,6 +70,28 @@ describe('/provider/user/repo', () => {
     .end(done);
   });
 
+  it('should not render request token when not has access', done => {
+    const query = mockFunction([]);
+
+    stub({
+      session: {
+        accessToken: 'tester-access-token',
+        login: {
+          provider: 'e2e',
+          user: 'hacker',
+        },
+      },
+      table: {
+        query,
+      },
+    })
+    .get('/e2e/tester/project')
+    .expect(200)
+    .expect(/not enabled/)
+    .expect(res => res.text.should.not.containEql('Enable Depcheck'))
+    .end(done);
+  });
+
   it('should create a new report when post with valid token', done => {
     const query = mockFunction([{
       provider: 'e2e',

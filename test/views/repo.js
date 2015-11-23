@@ -20,7 +20,7 @@ describe('view repo', () => {
     query('h5').text().should.equal('from views/tester');
   });
 
-  it('should render token if user is the owner', () => {
+  it('should render token if enabled and user is the owner', () => {
     const query = view('repo', {
       ...info,
       isOwner: true,
@@ -30,14 +30,35 @@ describe('view repo', () => {
     query('code').text().should.equal('project-token');
   });
 
-  it('should not render token if user is not the owner', () => {
+  it('should not render token if enabled but user is not the owner', () => {
+    const query = view('repo', {
+      ...info,
+      isOwner: false,
+      token: 'project-token',
+    });
+
+    query('code').should.have.length(0);
+  });
+
+  it('should render request button if not enabled and user is the owner', () => {
+    const query = view('repo', {
+      ...info,
+      isOwner: true,
+      token: null,
+    });
+
+    query('p').text().should.containEql('not enabled').and.containEql('button');
+    query('input').val().should.equal('Enable Depcheck');
+  });
+
+  it('should render hint if not enabled but user is not the owner', () => {
     const query = view('repo', {
       ...info,
       isOwner: false,
       token: null,
     });
 
-    query('code').should.have.length(0);
+    query('p').text().should.containEql('not enabled');
   });
 
   it('should render repo report page with report details', () => {
