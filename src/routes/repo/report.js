@@ -13,17 +13,17 @@ export function model({
     params: { provider, user, repo },
   }) {
   return Promise.all([
-    loginModel.isLoggedIn({ provider, user, session }),
+    loginModel.hasAccess({ session, provider, user, repo }),
     reportModel.query({ provider, user, repo }),
     tokenModel.get({ provider, user, repo }).catch(() => undefined),
   ])
-  .then(([isOwner, reports, token]) => ({
+  .then(([hasAccess, reports, token]) => ({
     provider,
     user,
     repo,
-    isOwner,
-    token: isOwner ? token : null,
-    tokenUrl: isOwner && !token ? urls.token.index({
+    hasAccess,
+    token: hasAccess ? token : null,
+    tokenUrl: hasAccess && !token ? urls.token.index({
       provider,
       user,
       repo,

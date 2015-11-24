@@ -1,10 +1,17 @@
 import response from './response';
 import { logger } from '../services';
+import { getProvider } from '../providers';
 
-export function set({ session, provider, user }) {
-  logger.debug(`[model:login] set login with provider [${provider}] and user [${user}].`);
-  session.login = { provider, user };
-  return Promise.resolve();
+export function loginUser({ session, provider, code }) {
+  logger.debug(`[model:login] login user with provider [${provider}] and code [${code}].`);
+  const targetProvider = getProvider(provider);
+  return targetProvider.getAccessToken(code)
+    .then(accessToken => session.accessToken = accessToken)
+    .then(accessToken => targetProvider.getUser(accessToken))
+    .then(user => {
+      session.login = { provider, user };
+      return user;
+    });
 }
 
 export function getUser({ login } = null) {
@@ -25,6 +32,14 @@ export function validate({ provider, user, session: { login = {} } }) {
   });
 }
 
-export function isLoggedIn({ provider, user, session }) {
-  return validate({ provider, user, session }).then(() => true, () => false);
+export function hasAccess({ session, provider, user, repo }) {
+  logger.debug(`[model:login] check if user [${provider}/${user}] has access to [${user}/${repo}].`);
+  const targetProvider = getProvider(provider);
+
+  // TODO cache repos
+  return targetProvider.getRepos(session.accessToken)
+    .then(repos => {
+      const targetRepo = `${user}/${repo}`;
+      return repos.indexOf(targetRepo) !== -1;
+    });
 }

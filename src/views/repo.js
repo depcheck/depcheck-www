@@ -44,24 +44,26 @@ const Report = ({ caption, dependencies, devDependencies, badgeUrl }) => (
   </li>
 );
 
-const Token = ({ repo, isOwner, token, url }) => {
-  if (!isOwner) {
+const Token = ({ repo, hasAccess, token, url }) => {
+  if (token && hasAccess) {
+    return (
+      <div>
+        <p><b>Repository token</b>: <code>{token}</code></p>
+        <p>Please keep the token security. Follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
+      </div>
+    );
+  } else if (token && !hasAccess) {
     return <div />;
+  } else if (!token && hasAccess) {
+    return (
+      <form method="post" action={url}>
+        <p>Repository {repo} is not enabled for depcheck. Enable it with the below button, and follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
+        <input className="btn btn-success pull-right" type="submit" value="Enable Depcheck" />
+      </form>
+    );
+  } else { // eslint-disable-line no-else-return
+    return <p>Repository {repo} is not enabled for depcheck.</p>;
   }
-
-  return token
-  ? (
-    <div>
-      <p><b>Repository token</b>: <code>{token}</code></p>
-      <p>Please keep the token security. Follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
-    </div>
-  )
-  : (
-    <form method="post" action={url}>
-      <p>Repository {repo} is not enabled for depcheck. Enable it with the below button, and follow the <a href="/tutorial">depcheck tutorial</a> to enjoy it.</p>
-      <input className="btn btn-success pull-right" type="submit" value="Enable Depcheck" />
-    </form>
-  );
 };
 
 export default React.createClass({
@@ -85,7 +87,7 @@ export default React.createClass({
             </ul>
             <Token
               repo={this.props.repo}
-              isOwner={this.props.isOwner}
+              hasAccess={this.props.hasAccess}
               token={this.props.token}
               url={this.props.tokenUrl}
             />

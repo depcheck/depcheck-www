@@ -10,12 +10,14 @@ describe('/login/test/callback', () =>
     stub({
       session,
       providers: {
-        getUser: (code) => Promise.resolve(`tester-${code}`),
+        getAccessToken: code => Promise.resolve(`access-token-${code}`),
+        getUser: accessToken => Promise.resolve(`tester-${accessToken}`),
       },
     })
     .get('/login/e2e/callback?code=123')
     .expect(302)
-    .expect('Location', '/e2e/tester-123')
+    .expect('Location', '/e2e/tester-access-token-123')
     .expect(() => session.login.should.be.ok())
+    .expect(() => session.accessToken.should.equal('access-token-123'))
     .end(done);
   }));

@@ -5,7 +5,8 @@ const clientId = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 
 export function getLoginUrl() {
-  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}`;
+  const scopes = ['public_repo'].join(',');
+  const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${scopes}`;
   logger.debug(`[provider:github] generate login URL [${url}].`);
   return Promise.resolve(url);
 }
@@ -33,7 +34,7 @@ function requestApi(url, options) {
     }));
 }
 
-export function getUser(code) {
+export function getAccessToken(code) {
   return requestApi('https://github.com/login/oauth/access_token', {
     method: 'POST',
     qs: {
@@ -42,12 +43,25 @@ export function getUser(code) {
       client_secret: clientSecret,
     },
   })
-  .then(({ access_token }) => requestApi('https://api.github.com/user', {
+  .then(({ access_token: accessToken }) => accessToken);
+}
+
+export function getUser(accessToken) {
+  return requestApi('https://api.github.com/user', {
     qs: {
-      access_token,
+      access_token: accessToken,
     },
-  }))
+  })
   .then(({ login }) => login);
+}
+
+export function getRepos(accessToken) {
+  return requestApi('https://api.github.com/user/repos', {
+    qs: {
+      access_token: accessToken,
+    },
+  })
+  .then(repos => repos.map(repo => repo.full_name));
 }
 
 export function query(user) {
