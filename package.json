@@ -21,7 +21,7 @@
     "body-parser": "^1.14.1",
     "bootstrap": "^3.3.5",
     "express": "^4.13.3",
-    "express-react-views": "^0.9.0",
+    "express-react-views": "lijunle/express-react-views#babel-6",
     "express-session": "^1.11.3",
     "file": "^0.2.2",
     "locallydb": "0.0.9",
