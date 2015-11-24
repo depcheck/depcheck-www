@@ -14,7 +14,7 @@ deploy:
   provider: azure_web_apps
   on:
     tags: true
-    node: 4
+    node: 5
 
 before_deploy:
   - git checkout -b master
