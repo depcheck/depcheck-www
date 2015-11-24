@@ -10,11 +10,14 @@ script:
   - npm run test-coverage
   - cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js
 
-before_deploy:
-  - git checkout -b master
-
 deploy:
   provider: azure_web_apps
   on:
     tags: true
     node: 4
+
+before_deploy:
+  - git checkout -b master
+
+after_deploy:
+  - curl https://depcheck.tk
