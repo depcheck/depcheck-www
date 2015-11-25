@@ -19,19 +19,6 @@ export function getUser({ login } = null) {
   return login;
 }
 
-export function validate({ provider, user, session: { login = {} } }) {
-  logger.debug(`[model:login] validate [${provider}/${user}] request with session login ${JSON.stringify(login)}.`);
-  return new Promise((resolve, reject) => {
-    if (provider === login.provider && user === login.user) {
-      logger.debug(`[model:login] validate [${provider}/${user}] request succeed.`);
-      resolve();
-    } else {
-      logger.info(`[model:login] validate [${provider}/${user}] request fail.`);
-      reject(response(401, 'Unanthorized, please login in.'));
-    }
-  });
-}
-
 export function hasAccess({ session, provider, user, repo }) {
   const login = session.login || {};
   const loggedInUser = `${login.provider}/${login.user}`;
