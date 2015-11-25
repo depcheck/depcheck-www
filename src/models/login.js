@@ -47,3 +47,14 @@ export function hasAccess({ session, provider, user, repo }) {
       return result;
     });
 }
+
+export function validateAccess({ session, provider, user, repo }) {
+  logger.debug(`[model:login] validate access, pass through to function hasAccess.`);
+  return hasAccess({ session, provider, user, repo })
+    .then(result => {
+      if (!result) {
+        const login = session.login || {};
+        throw response(401, `Unanthorized. User [${login.provider}/${login.user}] has no access to repo [${user}/${repo}].`);
+      }
+    });
+}
