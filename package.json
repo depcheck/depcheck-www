@@ -8,7 +8,6 @@
     "npm": "3.x"
   },
   "scripts": {
-    "preinstall": "npm prune",
     "lint": "babel-node ./node_modules/gulp/bin/gulp.js lint",
     "depcheck": "depcheck --ignore-bin-package=false --specials=bin,eslint --ignores=bootstrap,babel-*",
     "build": "babel-node ./node_modules/gulp/bin/gulp.js build",
