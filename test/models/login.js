@@ -13,25 +13,6 @@ const session = {
 };
 
 describe('model login', () => {
-  it('should pass validation when user match', () =>
-    model('login').validate({
-      provider: 'models',
-      user: 'tester',
-      session,
-    })
-    .then(() => 'everything'.should.be.ok()));
-
-  it('should fail validation when user not match', () =>
-    model('login').validate({
-      provider: 'models',
-      user: 'hacker',
-      session,
-    })
-    .catch(error => error.should.have.properties({
-      statusCode: 401,
-      message: 'Unanthorized, please login in.',
-    })));
-
   describe('hasAccess', () => {
     it('should return true when provider repos contains target repo', () => {
       const getRepos = mockFunction(['tester/project']);
@@ -69,6 +50,47 @@ describe('model login', () => {
       })
       .then(result => result.should.equal(false))
       .then(() => getRepos.calls[0][0].should.equal('project-token'));
+    });
+  });
+
+  describe('validateAccess', () => {
+    it('should pass access validation when provider repos contains target repo', () => {
+      const getRepos = mockFunction(['tester/project']);
+
+      const loginModel = model('login', {
+        '../providers': {
+          getProvider: () => ({ getRepos }),
+        },
+      });
+
+      loginModel.validateAccess({
+        session,
+        provider: 'models',
+        user: 'tester',
+        repo: 'project',
+      })
+      .then(() => 'everything'.should.be.ok());
+    });
+
+    it('should fail validation when user not match', () => {
+      const getRepos = mockFunction([]);
+
+      const loginModel = model('login', {
+        '../providers': {
+          getProvider: () => ({ getRepos }),
+        },
+      });
+
+      loginModel.validateAccess({
+        session,
+        provider: 'models',
+        user: 'tester',
+        repo: 'project',
+      })
+      .catch(error => error.should.have.properties({
+        statusCode: 401,
+        message: 'Unanthorized, please login in.',
+      }));
     });
   });
 });

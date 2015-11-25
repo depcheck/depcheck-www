@@ -19,27 +19,29 @@ export function getUser({ login } = null) {
   return login;
 }
 
-export function validate({ provider, user, session: { login = {} } }) {
-  logger.debug(`[model:login] validate [${provider}/${user}] request with session login ${JSON.stringify(login)}.`);
-  return new Promise((resolve, reject) => {
-    if (provider === login.provider && user === login.user) {
-      logger.debug(`[model:login] validate [${provider}/${user}] request succeed.`);
-      resolve();
-    } else {
-      logger.info(`[model:login] validate [${provider}/${user}] request fail.`);
-      reject(response(401, 'Unanthorized, please login in.'));
-    }
-  });
+export function hasAccess({ session, provider, user, repo }) {
+  const login = session.login || {};
+  const loggedInUser = `${login.provider}/${login.user}`;
+  const accessToken = session.accessToken || '';
+  const repoFullName = `${user}/${repo}`;
+  logger.debug(`[model:login] check if login user [${loggedInUser}] with access token [${accessToken}] has access to [${repoFullName}].`);
+
+  const targetProvider = getProvider(provider);
+  return targetProvider.getRepos(accessToken) // TODO cache repos to storage
+    .then(repos => {
+      const result = repos.indexOf(repoFullName) !== -1;
+      logger.debug(`[model:login] login user [${loggedInUser}] ${result ? 'has' : 'has no'} access to [${repoFullName}].`);
+      return result;
+    });
 }
 
-export function hasAccess({ session, provider, user, repo }) {
-  logger.debug(`[model:login] check if user [${provider}/${user}] has access to [${user}/${repo}].`);
-  const targetProvider = getProvider(provider);
-
-  // TODO cache repos
-  return targetProvider.getRepos(session.accessToken)
-    .then(repos => {
-      const targetRepo = `${user}/${repo}`;
-      return repos.indexOf(targetRepo) !== -1;
+export function validateAccess({ session, provider, user, repo }) {
+  logger.debug(`[model:login] validate access, pass through to function hasAccess.`);
+  return hasAccess({ session, provider, user, repo })
+    .then(result => {
+      if (!result) {
+        const login = session.login || {};
+        throw response(401, `Unanthorized. User [${login.provider}/${login.user}] has no access to repo [${user}/${repo}].`);
+      }
     });
 }
