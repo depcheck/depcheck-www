@@ -33,13 +33,17 @@ export function validate({ provider, user, session: { login = {} } }) {
 }
 
 export function hasAccess({ session, provider, user, repo }) {
-  logger.debug(`[model:login] check if user [${provider}/${user}] has access to [${user}/${repo}].`);
-  const targetProvider = getProvider(provider);
+  const login = session.login || {};
+  const loggedInUser = `${login.provider}/${login.user}`;
+  const accessToken = session.accessToken || '';
+  const repoFullName = `${user}/${repo}`;
+  logger.debug(`[model:login] check if login user [${loggedInUser}] with access token [${accessToken}] has access to [${repoFullName}].`);
 
-  // TODO cache repos
-  return targetProvider.getRepos(session.accessToken)
+  const targetProvider = getProvider(provider);
+  return targetProvider.getRepos(accessToken) // TODO cache repos to storage
     .then(repos => {
-      const targetRepo = `${user}/${repo}`;
-      return repos.indexOf(targetRepo) !== -1;
+      const result = repos.indexOf(repoFullName) !== -1;
+      logger.debug(`[model:login] login user [${loggedInUser}] ${result ? 'has' : 'has no'} access to [${repoFullName}].`);
+      return result;
     });
 }
