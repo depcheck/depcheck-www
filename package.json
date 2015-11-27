@@ -1,8 +1,9 @@
 {
-  "name": "depcheck-web",
+  "name": "depcheck-www",
   "description": "Depcheck web service",
   "repository": "https://github.com/lijunle/depcheck-web",
   "license": "MIT",
+  "private": true,
   "engines": {
     "node": "4.x",
     "npm": "3.x"
